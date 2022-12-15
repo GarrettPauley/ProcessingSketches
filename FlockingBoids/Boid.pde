@@ -8,7 +8,7 @@ class Boid {
   color boidColor;
   float r; 
   
-  // constructor
+  
   Boid(float x, float y){
     acceleration = new PVector(0,0); 
     velocity = new PVector(random(-1,1), random(-1,1)); 
@@ -41,12 +41,12 @@ class Boid {
   void flock(ArrayList<Boid> boids){
       PVector sep = separate(boids); 
       PVector ali = align(boids); 
-      //PVector coh = cohesion(boids); 
+      PVector coh = cohesion(boids); 
       PVector scat = scatter(boids);
       
       sep.mult(1.5); 
       ali.mult(1.0); 
-      //coh.mult(1.0);
+      coh.mult(1.0);
       scat.mult(3.0);
       
       applyForce(sep); 
