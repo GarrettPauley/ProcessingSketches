@@ -1,0 +1,95 @@
+Initiators and Generators from "The Algorithmic Beauty of Plants". 
+
+Prusinkiewicz, P., &amp; Lindenmayer, A. (1996). The algorithmic beauty of plants. Springer-Verlag. 
+
+
+Turtle Commands: p.7 
+
+F : 
+	Move forward a step length of d. 
+	The state of the turtle changes to (x', y', angle')
+	where x' = x + d * cos(angle) and y' = y + d * sin(angle)
+	draw a line from (x,y) to (x', y')
+f : 
+	Move forward a step of length d, but do not draw a line. 
+
++ : 
+	Turn counter-clockwise by angle. 
+	The next state of the turtle is (x,y,theta + angle)
+- : 
+	Turn clockwise by angle 
+	The next state of the turtle is (x,y,theta - angle)
+Notation: 
+angle (degrees)
+axiom
+initiator -> generator. 
+
+
+Chapter 1. Turtle interpretations of strings. 
+
+
+Figure 1.7
+
+a = 90
+F-F-F-F
+F -> F+FF-FF-F-F+F+FF-F-F+F+FF+FF-F
+
+
+Figure 1.8
+
+a = 90
+F+F+F+F
+F -> F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF
+f -> fffff
+
+Figure 1.8.a
+
+a = 90
+F-F-F-F
+F -> FF-F-F-F-F-F+F
+
+Figure 1.8.b
+
+a = 90
+F-F-F-F
+F -> FF-F-F-F-FF
+
+
+Figure 1.8.c
+
+a = 90
+F-F-F-F
+F -> FF-F+F-F-FF
+
+
+
+Figure 1.8.d
+
+a = 90
+F-F-F-F
+F -> FF-F--F-F
+
+Figure 1.10. Edge rewriting
+Dragon Curve
+Fl and Fr both represent F in normal turtle interpretations. 
+Fl represents left turns, and Fr represents a right turn.  
+
+a = 90
+Fl 
+Fl -> Fl+Fr+
+Fr -> -Fl-Fr
+
+
+Hilbert Curve
+Alphabet: L,R
+a = 90
+axiom: L
+L -> +RF-LFL-FR+
+R -> LF+RFR+FL-
+
+Figure 1.17.a
+
+a = 45
+axiom: L 
+L -> LFRFL-F-RFLFR+F+LFRFL
+R -> RFLFR+F+LFRFL-F-RFLFR
