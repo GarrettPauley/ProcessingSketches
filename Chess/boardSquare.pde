@@ -27,7 +27,7 @@ class Square {
    
    //(mouseX > x && mouseX < x + w) && (mouseY > y && mouseY < y + h)
    
-   if ((mouseX > x && mouseX < x + w) && (mouseY > y && mouseY < y + h) && mousePressed) {
+   if ((mouseX > x && mouseX < x + w) && (mouseY > y && mouseY < y + h)) {
      return true; 
    }
    else{
@@ -80,6 +80,10 @@ class Square {
   void setPiece(Piece p){
     piece = p; 
     
+  }
+  
+  int getSquareIndex(){
+   return this.index; 
   }
   
   

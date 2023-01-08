@@ -91,6 +91,12 @@ Square findSquareByName(String name){
   return squares.stream().filter(s -> s.name.equals(name)).findFirst().orElse(null); 
 }
 
+Square getSquareByIndex(int index){
+  return squares.get(index); 
+}
+
+
+
 void setPieceOnSquare(Piece p, Square s){
  s.piece = p;  
 }

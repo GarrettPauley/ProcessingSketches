@@ -1,13 +1,23 @@
 abstract class Piece{
+  List<Integer> leftEdgeIndexes = Arrays.asList(56,57,58,59,60,61,62,63);
+  List<Integer> rightEdgeIndexes  = Arrays.asList(0,1,2,3,4,5,6,7);
+  List<Integer> blackStartingSquares  = Arrays.asList(0,1,8,9,16,17,24,25,32,33,40,41,48,49,56,57);
+  ArrayList<Integer> moveIndexes; 
+  
   
   float x, y; 
   int h; 
+  int BUFFER = 20; 
   PImage image;
-  boolean WHITE; 
+  boolean isblackPiece; 
   boolean moving;
   int location;
-  Square startingSquare;
-  ArrayList<Square> previousSquares; 
+  Square currentSquare;
+  Square startingSquare; 
+  ArrayList<Square> previousSquares;
+  ArrayList<Square> legalMoves;
+ 
+  
   
   
   
@@ -15,12 +25,17 @@ abstract class Piece{
   Piece(String imagePath, Square s){
     image = loadImage(imagePath);
     startingSquare = s; 
+    currentSquare = s; 
     x = s.x; 
     y = s.y; 
     h = 80;
-    location = startingSquare.index; 
+    location = currentSquare.index; 
     previousSquares = new ArrayList<Square>(); 
-    previousSquares.add(startingSquare); 
+    previousSquares.add(currentSquare); 
+    moveIndexes = new ArrayList<Integer>();
+    isblackPiece = isBlackPieceIndex(location); 
+    
+
     
   }
  
@@ -34,9 +49,10 @@ abstract class Piece{
   }
   
   boolean clicked(){
-    boolean insideXRange = (mouseX > x && mouseX < x + startingSquare.w);
-    boolean insideYRange = (mouseY > y && mouseY < y + startingSquare.h);
+    boolean insideXRange = (mouseX > x + BUFFER && mouseX < x + BUFFER + currentSquare.w);
+    boolean insideYRange = (mouseY > y + BUFFER && mouseY < y  + BUFFER +currentSquare.h);
     if(insideXRange && insideYRange && mousePressed){
+      
       return true;  
       
     }
@@ -53,15 +69,25 @@ void movetoPreviousSquare(){
 
 
 void moveToSquare(Square s){
-   x = s.x; 
-   y = s.y; 
+   x = s.center.x - h/2; 
+   y = s.center.y - h/2; 
+ }
+ 
+ boolean isBlackPieceIndex(int index){
+   if (blackStartingSquares.contains(index)){
+    return true;  
+   }
+   else{
+     return false; 
+       
+     }
  }
 
 
 
 
 
-
+abstract ArrayList<Integer> legalMoves(); 
 
 abstract void move(); 
 

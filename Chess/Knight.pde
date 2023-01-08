@@ -8,13 +8,12 @@ class Knight extends Piece{
   @Override
   void move(){
     if(this.moving){
-     text("Clicked on " + this.startingSquare.name, width/2, height/2) ;
+     text("Clicked on " + this.currentSquare.name, width/2, height/2) ;
     }
   }
   
-  void legalMoves(){
-    
+    ArrayList<Integer> legalMoves(){
+    return null;
     
   }
-  
 }

@@ -1,14 +1,25 @@
+
+import java.util.stream.Collectors; 
 class Game{
  ArrayList<Piece> pieces; 
  ArrayList<Square> squares; 
- ChessBoard board; 
+ ChessBoard board;
+ boolean movingPiece;
+ boolean finishedMoving; 
+ ArrayList<Piece> movedPieces; 
+ int moveIndex = 0; 
+ color prevColor; 
+ 
+  ArrayList<Integer> moveIndexesToRemove; 
 
  
  Game(){ 
    board = new ChessBoard(1);
    squares = board.squares; 
-  
    initPieces(); 
+   movedPieces = new ArrayList<Piece>(); 
+   finishedMoving = true; 
+   moveIndexesToRemove =  new ArrayList<Integer>(); 
    
  }
   
@@ -71,9 +82,9 @@ class Game{
    pieces.add(new King("Resources/black_king.png", board.findSquareByName("E8"))); 
    
   
-
+// Add Pieces to starting squares
 for(Piece p_: pieces){
- Square s = board.findSquareByName(p_.startingSquare.name);  
+ Square s = board.findSquareByName(p_.currentSquare.name);  
  s.piece = p_; 
 }
    }
@@ -82,139 +93,220 @@ for(Piece p_: pieces){
   
  void run(){
    
-  
+    // display squares
     for(Square s: board.squares){
          s.display();
          debugMessages();
-         /*
+         showMoves(); 
          
-         *Got close with this. 
-         
-         
-         
-         if(s.isClicked() && s.piece != null){
-         text(s.piece.location + " " + s.piece.startingSquare.name + '\n', width/2, height - 10);
-         s.piece.moving = true; 
-         
-         }
-         else if (s.piece != null){
-          
-           //s.piece.moving = false; 
-           //s.piece.movetoPreviousSquare(); 
-          }
-          */
-    }
+    }    
+    
     
            
          
-      
-      
      for( Piece p: pieces){
       
       p.display();
-      if(p.moving){
-          p.x = mouseX - p.h / 2; 
-          p.y = mouseY - p.h / 2;
-      }
+      
+      
     
-     
-     
-     }
-      
-     
-   
+        
  }
-  // feeble attempt at fixing the bug that keeps moving all the pieces.  
-  void mouseDragged(){
-      Square s = getSquareUnderMouse();
-      if(s != null && s.piece != null){
-      s.piece.moving = true; 
-      
-    }
-    }
+ 
+
+  
+
+  
+ if(keyPressed && keyCode == LEFT){
+  undo(); 
+  
+  
+ }
+ 
+  if(keyPressed && keyCode == RIGHT ){
+  
+
+  
+ }
+ } // End of run() method. 
+ 
+ 
+ void checkForMovingPieces(){
+   Square s = getSquareUnderMouse(); 
+  
+     if(s != null && s.piece != null && movingPiece == false){
+       
+        print("clicking on Square " + s.name + '\n');
+        movingPiece = true;
+       // set that piece to be the moving piece. 
+         Piece p = s.piece; 
+         p.moving = true;
+          
+         prevColor = s.squareColor; 
+         s.squareColor = color(0,255,0);
+         s.piece = null;
+         
+         }
+       //text("moving Piece bool " + movingPiece, width/3, height - 10); 
+ }
+ 
+ void showMoves(){
+   if(getMovingPiece() != null){
+   Piece p = getMovingPiece();
+   print( "Legal moves from " + p.currentSquare.name +  " " + p.legalMoves() + '\n');
+   for(int loc : p.legalMoves()){
+     fill(0); 
+     Square s = board.getSquareByIndex(loc); 
+     ellipse(s.center.x, s.center.y, 4,4); 
+     
+   }
+   }
+ }
+ 
+ 
+ 
+ 
+ 
+ void placePieceAfterMovement(){
+ 
+
+  // check if one piece was moving. 
+       Square s = getSquareUnderMouse(); 
+       Piece p = getMovingPiece();
+         if(s != p.currentSquare){
+           p.previousSquares.add(p.currentSquare);
+           p.currentSquare.squareColor =  prevColor ;  
+           p.moveToSquare(s);
+           s.piece = p; 
+           movedPieces.add(p);
+           p.currentSquare = s;  
+           p.moving = false;
+           movingPiece = false; 
+           print("moved to " + p.currentSquare.name ); 
+         }
+         else{
+          s.squareColor = prevColor; 
+        
+         }
+   }
+   
+   void updateSquares(){
+     
+   }
+   
+ 
+ 
+ 
+ void undo(){
+  
+  if(movedPieces.size() > 0){
+  Piece p =  movedPieces.get(movedPieces.size() - 1);
+  p.movetoPreviousSquare(); 
+  
+  
+  }
+ }
+ 
+
+ 
+ 
+ 
  
  
 void debugMessages(){
-  for(Square s: board.squares){
-         s.display();
-         s.displaySquareIndex(); 
-         s.displaySquareName(); 
-          
-      }
-}
+   textSize(20);
+     fill(255,0,0); 
 
-void pieceMoving(){
+     for(Square s : squares){
   
-   for( Piece p: pieces){
-       p.x = p.startingSquare.x;
-       p.y = p.startingSquare.y; 
-       p.moving = false; 
-  }
+        
+        text(s.index, s.center.x, s.center.y);
+      
+     }
+     
+    text("Global Moving Piece:  " + movingPiece + '\n', width/2, height/2 + 40);
+    text("Number of Moving Pieces:  " + numberOfPiecesMoving() + '\n', width/2, height/2 + 20 ); 
+
+    text("Number of moves" + movedPieces.size() + '\n', width/2, height/2 );
+    //text("Number of active pieces" + numberOfPiecesMoving() + '\n', width/2, height/2 - 20); 
+}
+
+
+void dontMove(){
+Piece p = pieces.stream().filter(p2 -> p2.moving == true).findFirst().orElse(null);
+p.moving = false; 
+p.movetoPreviousSquare();
 
 }
 
 
 
- void piececlicked(Piece p){
-    if(p.clicked()){
-      p.moving = true; 
-      //stopOtherPiecesFromMoving(p); 
-      
-      p.x = mouseX - p.h / 2; 
-      p.y = mouseY - p.h / 2;
-      
-      }
-      
-      else {
-       
-     //Square s = getSquareUnderMouse(); 
-     //p.moveToSquare(s);  
-     //p.movetoPreviousSquare(); 
-     
-    }
-      }
-      
-      
-    
-      
 
 
-      
-      
-    
-    
- 
-
- 
- 
- 
- 
- void stopOtherPiecesFromMoving(Piece p){
-  for(Piece p2: pieces){
-    if(p2 == p){
-     p.moving = true;  
-    }
-    else{
-     p.moving = false;  
-    }
-  }
- }
-
-Piece anyPiecesMoving(){
- return pieces.stream().filter(p -> p.moving == true).findFirst().orElse(null);  
+boolean moreThanOnePieceMoving(){
+ return pieces.stream().filter(p -> p.moving == true).count() > 1; 
 }
 
  long numberOfPiecesMoving(){
  return pieces.stream().filter(p -> p.moving == true).count();  
 }
 
+Piece getMovingPiece(){
+  return pieces.stream().filter(p -> p.moving == true).findFirst().orElse(null);  
+  
+}
+
 Square getSquareUnderMouse(){
  return squares.stream().filter(s -> s.isClicked() == true).findFirst().orElse(null);   
 }
 
+List<Integer> getSquareswithBlackPieces(){
+  
+ return squares.stream()
+         .filter(s -> s.piece != null && s.piece.isblackPiece)
+           .map(Square::getSquareIndex)
+             .collect(Collectors.toList()); 
+}
 
+List<Integer> getSquareswithWhitePieces(){
+  
+ return squares.stream()
+         .filter(s -> s.piece != null && !s.piece.isblackPiece)
+           .map(Square::getSquareIndex)
+             .collect(Collectors.toList()); 
+}
+
+void removeOccupiedSquares(Piece p){
+   moveIndexesToRemove.clear(); 
+  if(p.isblackPiece){
+    for(int i: getSquareswithBlackPieces()){
+      moveIndexesToRemove.add(i); 
+    }
+  }
+  
+  else if(! p.isblackPiece){
+    for(int i: getSquareswithWhitePieces()){
+      moveIndexesToRemove.add(i);
+  }
+  
+}
 
 }
+boolean isLegalMove(Piece p, Square s){
+  // Square does not have piece of same color on it.
+  removeOccupiedSquares(p); 
+  return false; 
+  // Capturing Square has enemy piece on it. 
+  
+  
+}
+
+}
+
+
+
+
+
 
 
 

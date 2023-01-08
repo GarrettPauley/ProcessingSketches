@@ -12,24 +12,39 @@ void setup(){
 
 }
 
- 
- 
- 
-  
-
-
-
-
 
 void draw(){ 
   background(255); 
   
 game.run(); 
 
-
-  
- 
 }
+
+//void mouseReleased(){
+ //game.movingPiece = false;  
+//}
+
+
+/*
+void mouseReleased(){
+print("mouse Released Called \n");
+
+game.placePieceAfterMovement(); 
+
+
+}
+*/
+
+void mouseClicked(){
+if(!game.movingPiece){
+game.checkForMovingPieces();
+}
+else if (game.movingPiece){
+ game.placePieceAfterMovement();
+}
+}
+
+
 
 
 
