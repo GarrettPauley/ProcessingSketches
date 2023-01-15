@@ -4,19 +4,22 @@ class ChessBoard{
 int sizeY = 720; 
 int scale = sizeX/9;
 int cols, rows; 
-ArrayList<Square> squares = new ArrayList();
+ArrayList<Square> squares;
+ArrayList<Piece> pieces; 
 color lightSquareColor = color(204,183,174); 
 color darkSquareColor = color(112,102,119);
 
 ChessBoard(int mode){
-  createBoard(mode); 
+  createBoard(mode);
+  initPieces();
+
 }
 
  
   
 
 void createBoard(int mode){ 
-  
+  squares =  new ArrayList();
   int index = 0; 
   List<String> ranks = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
   List<String> files = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H"); 
@@ -87,11 +90,78 @@ void createBoard(int mode){
 }
 
 
+
+
+ 
+ void initPieces(){
+   pieces = new ArrayList<Piece>(); 
+   
+   pieces.add( new Pawn("Resources/white_pawn.png", findSquareByName("A2"),this));
+   
+  
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("B2"),this));  
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("C2"),this)); 
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("D2"),this)); 
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("E2"),this)); 
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("F2"),this));
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("G2"),this)); 
+   pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("H2"),this)); 
+  
+   pieces.add( new Pawn("Resources/black_pawn.png", findSquareByName("A7"),this));
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("B7"),this));  
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("C7"),this)); 
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("D7"),this)); 
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("E7"),this)); 
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("F7"),this));
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("G7"),this)); 
+   pieces.add(new Pawn("Resources/black_pawn.png", findSquareByName("H7"),this)); 
+   
+  
+   //White rooks
+   pieces.add(new Rook("Resources/white_rook.png", findSquareByName("A1"),this)); 
+   pieces.add(new Rook("Resources/white_rook.png", findSquareByName("H1"),this)); 
+   //Black rooks
+   pieces.add(new Rook("Resources/black_rook.png", findSquareByName("A8"),this)); 
+   pieces.add(new Rook("Resources/black_rook.png", findSquareByName("H8"),this)); 
+   //White Rook
+   pieces.add(new Knight("Resources/white_knight.png", findSquareByName("B1"),this)); 
+   pieces.add(new Knight("Resources/white_knight.png", findSquareByName("G1"),this)); 
+   
+   //Black knights
+   pieces.add(new Knight("Resources/black_knight.png", findSquareByName("B8"),this)); 
+   pieces.add(new Knight("Resources/black_knight.png", findSquareByName("G8"),this)); 
+   
+   
+    //White Bishops
+   pieces.add(new Bishop("Resources/white_bishop.png", findSquareByName("C1"),this)); 
+   pieces.add(new Bishop("Resources/white_bishop.png", findSquareByName("F1"),this)); 
+   
+   //Black Bishops
+   pieces.add(new Bishop("Resources/black_bishop.png", findSquareByName("C8"),this)); 
+   pieces.add(new Bishop("Resources/black_bishop.png", findSquareByName("F8"),this)); 
+   
+   // White Queen and King 
+   pieces.add(new Queen("Resources/white_queen.png", findSquareByName("D1"),this)); 
+   pieces.add(new King("Resources/white_king.png", findSquareByName("E1"),this)); 
+   // Black Queen and King 
+   pieces.add(new Queen("Resources/black_queen.png", findSquareByName("D8"),this)); 
+   pieces.add(new King("Resources/black_king.png", findSquareByName("E8"),this)); 
+   
+  
+// Add Pieces to starting squares
+for(Piece p_: pieces){
+ Square s = findSquareByName(p_.currentSquare.name);  
+ s.piece = p_; 
+}
+   }
+
+
 Square findSquareByName(String name){
   return squares.stream().filter(s -> s.name.equals(name)).findFirst().orElse(null); 
 }
 
 Square getSquareByIndex(int index){
+  
   return squares.get(index); 
 }
 
@@ -99,6 +169,22 @@ Square getSquareByIndex(int index){
 
 void setPieceOnSquare(Piece p, Square s){
  s.piece = p;  
+}
+
+List<Integer> getSquareswithBlackPieces(){
+  
+ return squares.stream()
+         .filter(s -> s.piece != null && s.piece.isblackPiece)
+           .map(Square::getSquareIndex)
+             .collect(Collectors.toList()); 
+}
+
+List<Integer> getSquareswithWhitePieces(){
+  
+ return squares.stream()
+         .filter(s -> s.piece != null && !s.piece.isblackPiece)
+           .map(Square::getSquareIndex)
+             .collect(Collectors.toList()); 
 }
 
 

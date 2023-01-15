@@ -3,6 +3,7 @@ abstract class Piece{
   List<Integer> rightEdgeIndexes  = Arrays.asList(0,1,2,3,4,5,6,7);
   List<Integer> blackStartingSquares  = Arrays.asList(0,1,8,9,16,17,24,25,32,33,40,41,48,49,56,57);
   ArrayList<Integer> moveIndexes; 
+  ChessBoard board; 
   
   
   float x, y; 
@@ -22,7 +23,7 @@ abstract class Piece{
   
   
   
-  Piece(String imagePath, Square s){
+  Piece(String imagePath, Square s, ChessBoard b){
     image = loadImage(imagePath);
     startingSquare = s; 
     currentSquare = s; 
@@ -34,6 +35,7 @@ abstract class Piece{
     previousSquares.add(currentSquare); 
     moveIndexes = new ArrayList<Integer>();
     isblackPiece = isBlackPieceIndex(location); 
+    board = b; 
     
 
     
@@ -63,8 +65,8 @@ abstract class Piece{
 }
 
 void movetoPreviousSquare(){
- x = previousSquares.get(previousSquares.size() - 1).x;
- y = previousSquares.get(previousSquares.size() - 1).y;
+  Square s = previousSquares.get(previousSquares.size() - 1);
+  moveToSquare(s);
 }
 
 
@@ -82,14 +84,45 @@ void moveToSquare(Square s){
        
      }
  }
+ 
+ boolean enemyPieceOnSquare(Square s){
+  if(s.piece != null){
+   return s.piece.isblackPiece != this.isblackPiece ;
+  }
+  else {
+   return false; 
+  }
+ }
+ 
+ 
+ void captureOn(Square s){
+  Piece captured = s.piece;
+  board.pieces.remove(captured);
+  previousSquares.add(currentSquare);
+  moveToSquare(s); 
+  s.piece = this;
+  moving = false;
+  
+  
+ }
 
-
+  void move(Square s){
+        previousSquares.add(currentSquare);
+        s.piece = this;
+        currentSquare = s; 
+        
+        moveToSquare(s);
+     
+        game.movedPieces.add(this);
+        moving = false;
+         
+  }
 
 
 
 abstract ArrayList<Integer> legalMoves(); 
 
-abstract void move(); 
+  
 
 
 
