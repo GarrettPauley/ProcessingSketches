@@ -53,9 +53,9 @@ showMoves();
   
  }
  
-  if(keyPressed && keyCode == RIGHT ){
+  if(keyPressed && key == 'r' ){
   
-
+  startingPosition(); 
   
    }
  } // End of run() method. 
@@ -144,6 +144,23 @@ showMoves();
   
   
   }
+ }
+ 
+ void startingPosition(){
+   
+   for(Square s: board.squares){
+     s.piece = null; 
+   }
+   
+   for(Piece p: board.capturedPieces){
+    board.pieces.add(p);  
+   }
+   
+  for(Piece p : board.pieces){
+   p.move(p.startingSquare); 
+  }
+  
+  board.capturedPieces.clear(); 
  }
  
 

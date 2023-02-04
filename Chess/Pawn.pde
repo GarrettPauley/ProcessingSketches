@@ -123,14 +123,20 @@ class Pawn extends Piece{
   
   
  void  addwhitePawnMoves(){
-     if(onStart() && noPieceInFront()){
+     if(onStart() && noPieceInFront() && noPieceTwoSquaresInFront()){
       moveIndexes.add(currentSquare.index - 2);
       moveIndexes.add(currentSquare.index - 1);
     }
     
-     if(!onStart() && noPieceInFront()){
+     if(onStart() && noPieceInFront()&& !noPieceTwoSquaresInFront()){
        moveIndexes.add(currentSquare.index - 1);
     }
+    
+      
+    if(!onStart() && noPieceInFront()){
+       moveIndexes.add(currentSquare.index - 1);
+    }
+    
     
     if(canAttackToRight()){
       moveIndexes.add(currentSquare.index + 7); 
@@ -149,10 +155,15 @@ class Pawn extends Piece{
   
   void addblackPawnMoves(){
     
-    if(onStart() && noPieceInFront()){
+    if(onStart() && noPieceInFront() && noPieceTwoSquaresInFront()){
       moveIndexes.add(currentSquare.index + 2);
       moveIndexes.add(currentSquare.index + 1);
     }
+    
+    if(onStart() && noPieceInFront()&& !noPieceTwoSquaresInFront()){
+      moveIndexes.add(currentSquare.index + 1);
+    }
+    
     
     if(!onStart() && noPieceInFront()){
        moveIndexes.add(currentSquare.index + 1);
@@ -183,6 +194,21 @@ class Pawn extends Piece{
     }
     else{
       Square s = board.getSquareByIndex(currentSquare.index - 1);
+      if(s.piece == null) return true; 
+      else return false;   
+    }
+      
+
+  }
+  
+    boolean noPieceTwoSquaresInFront(){
+    if(isblackPiece){ 
+      Square s = board.getSquareByIndex(currentSquare.index + 2);
+      if(s.piece == null) return true; 
+      else return false; 
+    }
+    else{
+      Square s = board.getSquareByIndex(currentSquare.index - 2);
       if(s.piece == null) return true; 
       else return false;   
     }

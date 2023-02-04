@@ -5,7 +5,8 @@ int sizeY = 720;
 int scale = sizeX/9;
 int cols, rows; 
 ArrayList<Square> squares;
-ArrayList<Piece> pieces; 
+ArrayList<Piece> pieces;
+ArrayList<Piece> capturedPieces; 
 color lightSquareColor = color(204,183,174); 
 color darkSquareColor = color(112,102,119);
 
@@ -94,7 +95,8 @@ void createBoard(int mode){
 
  
  void initPieces(){
-   pieces = new ArrayList<Piece>(); 
+   pieces = new ArrayList<Piece>();
+   capturedPieces = new ArrayList<Piece>(); 
    
    pieces.add( new Pawn("Resources/white_pawn.png", findSquareByName("A2"),this));
    
@@ -194,7 +196,7 @@ List<Integer> getSquareswithWhitePieces(){
 
 
 
- //<>//
+ //<>// //<>//
 
 
 

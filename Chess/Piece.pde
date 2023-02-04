@@ -98,6 +98,7 @@ void moveToSquare(Square s){
  void captureOn(Square s){
   Piece captured = s.piece;
   board.pieces.remove(captured);
+  board.capturedPieces.add(captured);
   previousSquares.add(currentSquare);
   moveToSquare(s); 
   s.piece = this;
