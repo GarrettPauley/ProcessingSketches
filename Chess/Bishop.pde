@@ -5,16 +5,27 @@ class Bishop extends Piece{
      
   }
   
-  @Override
-  void move(Square s){
-    if(this.moving){
-     text("Clicked on " + this.currentSquare.name, width/2, height/2) ;
+
+  
+   ArrayList<Integer> legalMoves(){
+   
+   moveIndexes.clear();
+   addBishopMoves();
+   removeOccupiedSquares();
+    
+  return moveIndexes; 
+  }
+  
+  void addBishopMoves(){
+    for(Square s : board.squares){
+      boolean onLeftToRightDiagonal = (s.index - currentSquare.index) % 7 == 0;   
+      boolean onRightToLeftDiagonal = (s.index - currentSquare.index) % 9 == 0; 
+      boolean sameColorSquare = s.squareColor == currentSquare.squareColor; 
+     if((onLeftToRightDiagonal || onRightToLeftDiagonal) && sameColorSquare ){
+       moveIndexes.add(s.index);  
+     }
     }
   }
   
-   ArrayList<Integer> legalMoves(){
-    return null;
-    
-  }
-  
+ 
 }

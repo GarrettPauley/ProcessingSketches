@@ -107,7 +107,7 @@ void moveToSquare(Square s){
   
  }
 
-  void move(Square s){
+   void move(Square s){
         previousSquares.add(currentSquare);
         s.piece = this;
         currentSquare = s; 
@@ -119,7 +119,20 @@ void moveToSquare(Square s){
          
   }
 
-
+  void removeOccupiedSquares(){
+   List<Integer> occupied; 
+   if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
+   else   occupied = board.getSquareswithWhitePieces();
+   
+     for(int i = 0; i < moveIndexes.size(); i++){
+      if(occupied.contains(moveIndexes.get(i))){
+       moveIndexes.remove(i);  
+      }
+     }
+    
+    print(occupied);
+   
+  }
 
 abstract ArrayList<Integer> legalMoves(); 
 

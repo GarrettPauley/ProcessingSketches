@@ -34,7 +34,7 @@ class Game{
     // display squares
     for(Square s: board.squares){
          s.display();
-         //debugMessages();
+         debugMessages();
              
     }          
      for( Piece p: board.pieces){
