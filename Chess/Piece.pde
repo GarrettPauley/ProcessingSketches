@@ -129,9 +129,6 @@ void moveToSquare(Square s){
        moveIndexes.remove(i);  
       }
      }
-    
-    print(occupied);
-   
   }
 
 abstract ArrayList<Integer> legalMoves(); 
