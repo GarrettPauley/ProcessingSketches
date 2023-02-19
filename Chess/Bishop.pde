@@ -23,33 +23,46 @@ class Bishop extends Piece{
     getDiagonalSquares(-9);
     getDiagonalSquares(7);
     getDiagonalSquares(-7);
+
   
   }
 
   
   
-  // TODO - need to include the first square on the diagonal with an enemy piece. 
+  
   void getDiagonalSquares(int offset){
    int start = currentSquare.index; 
    int counter = 1; 
-   int foundPiecesOnDiagonal = 0; 
+   
    boolean openDiagonal = true; 
    
-  
+    
     while( openDiagonal  && (start + (offset * counter)) <= 64 && (start + (offset * counter)) >= 0 ){
+      
      Square nextSquareOnDiagonal = board.getSquareByIndex(start + (offset * counter));
-     
-     if(nextSquareOnDiagonal.piece == null){
-      moveIndexes.add(nextSquareOnDiagonal.index); 
-      counter++; 
-     }
-     else{
-     openDiagonal = false; 
-     }
+       // Find all the open spaces on the diagonal 
+       if(nextSquareOnDiagonal.piece == null && nextSquareOnDiagonal.squareColor == currentSquare.squareColor){
+    
+        moveIndexes.add(nextSquareOnDiagonal.index); 
+        counter++; 
+       }
+       // Find the first capturable piece on the diagonal
+       else if(nextSquareOnDiagonal.piece != null && (nextSquareOnDiagonal.piece.isblackPiece != this.isblackPiece) && nextSquareOnDiagonal.squareColor == currentSquare.squareColor ){
+         moveIndexes.add(nextSquareOnDiagonal.index); 
+         break;
+       }
+      
+      else{
+       openDiagonal = false; 
+       }
     }
    
    
   }
+  
+  
+  
+ 
 
     
   }
