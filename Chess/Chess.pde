@@ -1,5 +1,9 @@
 import java.util.*;
 
+int ADJACENT = 8; 
+int DIAGONAL_LEFT = 9; 
+int DIAGONAL_RIGHT = 7; 
+int ABOVE_BELOW = 1; 
 
 Game game; 
 

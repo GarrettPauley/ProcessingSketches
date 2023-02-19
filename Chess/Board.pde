@@ -196,7 +196,7 @@ List<Integer> getSquareswithWhitePieces(){
 
 
 
- //<>// //<>//
+ //<>//
 
 
 

@@ -175,7 +175,7 @@ void debugMessages(){
 
      for(Square s : squares){
   
-        
+        //text( String.valueOf(s.piece == null), s.center.x, s.center.y); 
         text(s.index, s.center.x, s.center.y);
       
      }

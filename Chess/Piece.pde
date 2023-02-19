@@ -1,6 +1,8 @@
 abstract class Piece{
   List<Integer> leftEdgeIndexes = Arrays.asList(56,57,58,59,60,61,62,63);
   List<Integer> rightEdgeIndexes  = Arrays.asList(0,1,2,3,4,5,6,7);
+  List<Integer> topEdgeIndexes = Arrays.asList(63,55,47,39,31,23,15,7);
+  List<Integer> bottomEdgeIndexes = Arrays.asList(56, 48, 40, 32, 24, 16, 8, 0); 
   List<Integer> blackStartingSquares  = Arrays.asList(0,1,8,9,16,17,24,25,32,33,40,41,48,49,56,57);
   ArrayList<Integer> moveIndexes; 
   ChessBoard board; 
@@ -124,11 +126,12 @@ void moveToSquare(Square s){
    if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
    else   occupied = board.getSquareswithWhitePieces();
    
-     for(int i = 0; i < moveIndexes.size(); i++){
-      if(occupied.contains(moveIndexes.get(i))){
+     for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>//
+      if(occupied.contains(moveIndexes.get(i))){ //<>//
        moveIndexes.remove(i);  
       }
      }
+      
   }
 
 abstract ArrayList<Integer> legalMoves(); 

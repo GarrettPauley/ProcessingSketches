@@ -37,7 +37,7 @@ class Bishop extends Piece{
    boolean openDiagonal = true; 
    
     
-    while( openDiagonal  && (start + (offset * counter)) <= 64 && (start + (offset * counter)) >= 0 ){
+    while( openDiagonal  && (start + (offset * counter)) < 64 && (start + (offset * counter)) >= 0 ){
       
      Square nextSquareOnDiagonal = board.getSquareByIndex(start + (offset * counter));
        // Find all the open spaces on the diagonal 
