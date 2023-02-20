@@ -10,9 +10,55 @@ ArrayList<Piece> capturedPieces;
 color lightSquareColor = color(204,183,174); 
 color darkSquareColor = color(112,102,119);
 
+
+HashMap<String, List<Integer> > files = new HashMap<String, List<Integer>>();
+HashMap<String, List<Integer> > ranks = new HashMap<String, List<Integer>>(); 
+
+  List<Integer> Hfile = Arrays.asList(56,57,58,59,60,61,62,63); 
+  List<Integer> Gfile  = Arrays.asList(48,49,50,51,52,53,54,55);
+  List<Integer> Ffile  = Arrays.asList(40,41,42,43,44,45,46,47);
+  List<Integer> Efile  = Arrays.asList(32,33,34,35,36,37,38,39);
+  List<Integer> Dfile  = Arrays.asList(24,25,26,27,28,29,30,31);
+  List<Integer> Cfile  = Arrays.asList(16,17,18,19,20,21,22,23);
+  List<Integer> Bfile  = Arrays.asList(8,9,10,11,12,13,14,15);
+  List<Integer> Afile  = Arrays.asList(0,1,2,3,4,5,6,7);
+  
+  List<Integer> rank1  = Arrays.asList(63,55,47,39,31,23,15,7);
+  List<Integer> rank2  = Arrays.asList(62,54,46,38,30,22,14,6);
+  List<Integer> rank3  = Arrays.asList(61,53,45,37,29,21,13,5);
+  List<Integer> rank4  = Arrays.asList(60,52,44,36,28,20,12,4);
+  List<Integer> rank5  = Arrays.asList(59,51,43,35,27,19,11,3);
+  List<Integer> rank6  = Arrays.asList(58,50,42,34,26,18,10,2);
+  List<Integer> rank7  = Arrays.asList(57,49,41,33,25,17,9, 1);
+  List<Integer> rank8  = Arrays.asList(56,48,40,32,24,16,8,0);
+  
+  
+  //populate the files hashmap
+  void hashMapHelper(){
+    files.put("Hfile", Hfile);
+    files.put("Gfile", Gfile);
+    files.put("Ffile", Ffile);
+    files.put("Efile", Efile);
+    files.put("Dfile", Dfile);
+    files.put("Cfile", Cfile);
+    files.put("Bfile", Bfile);
+    files.put("Afile", Afile);
+    
+    ranks.put("rank1", rank1);
+    ranks.put("rank2", rank2);
+    ranks.put("rank3", rank3);
+    ranks.put("rank4", rank4);
+    ranks.put("rank5", rank5);
+    ranks.put("rank6", rank6);
+    ranks.put("rank7", rank7);
+    ranks.put("rank8", rank8);
+    
+  }
+
 ChessBoard(int mode){
   createBoard(mode);
   initPieces();
+  hashMapHelper(); 
 
 }
 
