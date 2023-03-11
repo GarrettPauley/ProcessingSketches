@@ -10,7 +10,9 @@ class Game{
  int moveIndex = 0; 
  color prevColor; 
  
-  ArrayList<Integer> moveIndexesToRemove; 
+
+ ArrayList<Square> toDraw = new ArrayList(); 
+ ArrayList<Integer> moveIndexesToRemove; 
 
  
  Game(){ 
@@ -34,7 +36,7 @@ class Game{
     // display squares
     for(Square s: board.squares){
          s.display();
-         debugMessages();
+         //debugMessages();
              
     }          
      for( Piece p: board.pieces){
@@ -58,6 +60,21 @@ showMoves();
   startingPosition(); 
   
    }
+   
+  if(mousePressed && (mouseButton == RIGHT) ){
+    if(getSquareUnderMouse() != null)
+     getSquareUnderMouse().drawCircleInSquare(); 
+  }
+  
+  drawArrow();
+  
+
+  
+     
+  
+  
+  
+   
  } // End of run() method. 
  
  
@@ -71,9 +88,7 @@ showMoves();
    
          Piece p = s.piece; 
          p.moving = true;
-        // Uncomment to make the moving piece green. 
-         //prevColor = s.squareColor; 
-         //s.squareColor = color(0,255,0);
+     
          s.piece = null;
          
          }
@@ -127,9 +142,7 @@ showMoves();
        
    }
    
-   void updateSquares(){
-     
-   }
+  
    
  
  
@@ -175,16 +188,11 @@ void debugMessages(){
 
      for(Square s : squares){
   
-        //text( String.valueOf(s.piece == null), s.center.x, s.center.y); 
+        
         text(s.index, s.center.x, s.center.y);
       
      }
      
-    //text("Global Moving Piece:  " + movingPiece + '\n', width/2, height/2 + 40);
-    //text("Number of Moving Pieces:  " + numberOfPiecesMoving() + '\n', width/2, height/2 + 20 ); 
-
-    //text("Number of moves" + movedPieces.size() + '\n', width/2, height/2 );
-    //text("Number of active pieces" + numberOfPiecesMoving() + '\n', width/2, height/2 - 20); 
 }
 
 boolean moreThanOnePieceMoving(){
@@ -205,11 +213,48 @@ Square getSquareUnderMouse(){
 }
 
 
+void drawArrow(){
+   
+   if(mousePressed && (mouseButton == RIGHT) && (keyPressed && key == 'a') ){
+     
+    if(getSquareUnderMouse() != null){
+      
+      toDraw.add(getSquareUnderMouse()); 
+      
+     }
+  
+   
+    
+    Square s1 = toDraw.get(0); 
+    Square s2 = toDraw.get(toDraw.size() - 1); 
+    
+      stroke(0,0,255); 
+      strokeWeight(7);
+      fill(0,0,255); 
+     pushMatrix(); 
+      line(s1.center.x, s1.center.y, s2.center.x, s2.center.y);
+      translate(s2.center.x, s2.center.y); 
+      ellipse(0,0, 10,10);
+      
+    popMatrix();
+    
+    
+  
+    
+  }
 
-
-
-
+  }
+  
+  
+ 
+  
 }
+
+
+
+
+
+
 
 
 

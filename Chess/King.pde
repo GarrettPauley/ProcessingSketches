@@ -15,35 +15,35 @@ class King extends Piece{
    boolean onBottomEdge = bottomEdgeIndexes.contains(currentSquare.index);
    
    if(onLeftEdge && onBottomEdge){
-     print("LEFT AND BOTTOM \n"); 
+     
     moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ADJACENT);
     moveIndexes.add(currentSquare.index - DIAGONAL_RIGHT);
    }
    
    if(onRightEdge && onBottomEdge){
-     print("RIGHT AND BOTTOM \n"); 
+     
     moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index + ADJACENT );
     moveIndexes.add(currentSquare.index + DIAGONAL_LEFT);
    }
    
    if(onLeftEdge && onTopEdge){
-     print("LEFT AND TOP \n"); 
+     
     moveIndexes.add(currentSquare.index - ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ADJACENT );
     moveIndexes.add(currentSquare.index - DIAGONAL_LEFT);
    }
    
    if(onRightEdge && onTopEdge){
-     print("RIGHT AND TOP \n"); 
+      
     moveIndexes.add(currentSquare.index - ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ADJACENT );
     moveIndexes.add(currentSquare.index - DIAGONAL_LEFT);
    }
    
    if(onRightEdge){
-     print("RIGHT \n"); 
+     
      moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ABOVE_BELOW );
     moveIndexes.add(currentSquare.index + DIAGONAL_RIGHT );
@@ -52,7 +52,7 @@ class King extends Piece{
    }
    
     if(onLeftEdge){
-      print("LEFT \n"); 
+       
      moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ABOVE_BELOW );
     moveIndexes.add(currentSquare.index - DIAGONAL_RIGHT );
@@ -62,7 +62,7 @@ class King extends Piece{
    
    
     if(onTopEdge){
-      print("TOP \n"); 
+       
      moveIndexes.add(currentSquare.index - ABOVE_BELOW);
     moveIndexes.add(currentSquare.index + ADJACENT );
     moveIndexes.add(currentSquare.index - ADJACENT );
@@ -71,7 +71,7 @@ class King extends Piece{
    }
    
      if(onBottomEdge){
-       print("BOTTOM \n"); 
+       
      moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ADJACENT );
     moveIndexes.add(currentSquare.index + ADJACENT );
@@ -80,7 +80,7 @@ class King extends Piece{
    }
    
    if(!onBottomEdge && !onTopEdge && !onLeftEdge && !onRightEdge){
-     print("SOMEWHERE IN THE MIDDLE \n"); 
+      
     moveIndexes.add(currentSquare.index + ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ABOVE_BELOW);
     moveIndexes.add(currentSquare.index - ADJACENT );
@@ -92,18 +92,30 @@ class King extends Piece{
      
    }
    
+   // Does not behave as expected. 
+   //for(Square s: board.squares){
+   //  if ( 
+   //  (isOneFileAway(currentSquare, s) && isOneRankAway(currentSquare, s)) 
+   //  || (onSameRank(currentSquare, s) && isOneFileAway(currentSquare, s)) 
+   //  || (onSameFile(currentSquare, s) && isOneRankAway(currentSquare, s)) 
+     
+   //  ) {moveIndexes.add(s.index);} 
+   //}
+   
+   
    
    
  }
-  
+   @Override
    ArrayList<Integer> legalMoves(){
     moveIndexes.clear(); 
     addKingMoves(); 
-    print("Moves before removing:  " + moveIndexes + "\n");
-    removeOccupiedSquares(); 
-    print("Moves after removing: " + moveIndexes + "\n"); 
+    //removeOccupiedSquares();  
     return moveIndexes; 
     
   }
+  
+
+  
   
 }

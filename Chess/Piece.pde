@@ -52,7 +52,6 @@ abstract class Piece{
   void display(){
     fill(0);
     stroke(255); 
-    //rect(x,y,h,h); 
     image(image, x , y, h,h); 
     
   }
@@ -125,6 +124,9 @@ void moveToSquare(Square s){
         moving = false;
          
   }
+  
+  
+  
 
   void removeOccupiedSquares(){
    List<Integer> occupied; 
@@ -138,6 +140,101 @@ void moveToSquare(Square s){
      }
       
   }
+  
+   boolean isOneRankAway(Square s1, Square s2){
+   return ( (s1.index - s2.index) & 7) == 1; 
+  }
+  
+  boolean isOneFileAway(Square s1, Square s2){
+   return (s1.index >> 3) - (s2.index >> 3) == 1; 
+  }
+  
+  boolean onSameFile(Square s1, Square s2){
+    int index1 = s1.index; 
+    int index2 = s2.index;
+    return (index2 >> 3) - (index1 >> 3) == 0; 
+  }
+  
+  boolean onSameRank(Square s1, Square s2){
+    int index1 = s1.index; 
+    int index2 = s2.index;
+    
+    return ((index2 - index1) & 7) == 0; 
+  }
+  
+  boolean onSameDiagonal(Square s1, Square s2){
+    
+    int index1 = s1.index; 
+    int index2 = s2.index; 
+    boolean sameColor = s1.squareColor == s2.squareColor;
+    
+    return  ( (index1 - index2) % 7 == 0 || (index1 - index2) % 9 == 0 ) && sameColor ;
+    
+  }
+  
+  
+  
+     void getFileAndRankMoves(int offset){
+       int start = currentSquare.index; 
+       int counter = 1; 
+   
+        boolean openLines = true; 
+   
+        while( openLines  && (start + (offset * counter)) < 64 && (start + (offset * counter)) >= 0 ){ 
+         Square nextSquare = board.getSquareByIndex(start + (offset * counter));
+           // Find all the open spaces on vertical or horizontal line (depending  on offset provided) 
+           if(nextSquare.piece == null ){
+            moveIndexes.add(nextSquare.index); 
+            counter++; 
+           }
+           // Find the first capturable piece on the line
+           else if(nextSquare.piece != null 
+                     && (nextSquare.piece.isblackPiece != this.isblackPiece) 
+                     && (onSameRank(nextSquare, currentSquare) || onSameFile(nextSquare, currentSquare)
+                     )){
+             moveIndexes.add(nextSquare.index);
+             break;
+           }
+          
+          else{
+           openLines = false; 
+           }
+        }
+   
+}
+
+
+    void getDiagonalMoves(int offset){
+      
+       int start = currentSquare.index; 
+       int counter = 1; 
+       
+       boolean openLines = true; 
+       
+      while( openLines  && (start + (offset * counter)) < 64 && (start + (offset * counter)) >= 0 ){ 
+        
+       Square nextSquare = board.getSquareByIndex(start + (offset * counter));
+       
+         // Find all the open spaces on vertical or horizontal line (depending  on offset provided) 
+         if(nextSquare.piece == null && onSameDiagonal(currentSquare, nextSquare)){
+          moveIndexes.add(nextSquare.index); 
+          counter++; 
+         }
+         // Find the first capturable piece on the line
+         else if(nextSquare.piece != null 
+                   && (nextSquare.piece.isblackPiece != this.isblackPiece) 
+                   && onSameDiagonal(currentSquare, nextSquare)
+                   ){
+           moveIndexes.add(nextSquare.index);
+           break;
+         }
+        
+        else{
+         openLines = false; 
+         }
+      }
+   
+} 
   
   
 

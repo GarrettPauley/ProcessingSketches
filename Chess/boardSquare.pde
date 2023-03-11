@@ -21,6 +21,10 @@ class Square {
    
   }
   
+  Square(){
+    
+  }
+  
   
   
   boolean isClicked(){ 
@@ -46,7 +50,7 @@ class Square {
     if(isClicked()){
      
       fill(255,0,0); 
-      ellipse(center.x, center.y, 15,15); 
+      
       
     }
    
@@ -77,6 +81,15 @@ class Square {
     
   }
   
+  void drawCircleInSquare(){
+   pushMatrix(); 
+   noFill(); 
+   stroke(0,200,0); 
+   strokeWeight(2); 
+   ellipse(center.x, center.y, w-10,h-10); 
+   popMatrix();
+  }
+  
   void setPiece(Piece p){
     piece = p; 
     
@@ -86,9 +99,12 @@ class Square {
    return this.index; 
   }
   
-  
-  
-  
-  
+ 
   
 }
+  
+  
+  
+  
+  
+  

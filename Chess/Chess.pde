@@ -33,7 +33,13 @@ game.checkForMovingPieces();
 else if (game.movingPiece){
  game.placePieceAfterMovement();
 }
+
+ 
 }
+
+void mouseReleased(){
+    game.toDraw.clear();
+  }
 
 
 

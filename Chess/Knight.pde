@@ -17,7 +17,7 @@ class Knight extends Piece{
   }
   
 
-  
+    @Override
     ArrayList<Integer> legalMoves(){
        moveIndexes.clear();
        addKnightMoves();

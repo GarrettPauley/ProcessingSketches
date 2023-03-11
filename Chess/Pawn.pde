@@ -24,7 +24,7 @@ class Pawn extends Piece{
   
   
   
-  
+  @Override
   ArrayList<Integer> legalMoves(){
    
    moveIndexes.clear();
@@ -37,6 +37,7 @@ class Pawn extends Piece{
     }
   return moveIndexes; 
   }
+  
   
   Boolean canAttackToRight(){
     if(isblackPiece ){ 
