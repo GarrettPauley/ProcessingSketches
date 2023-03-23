@@ -1,5 +1,6 @@
 
 import java.util.stream.Collectors; 
+import processing.sound.*; 
 class Game{
 
  ArrayList<Square> squares; 
@@ -9,6 +10,7 @@ class Game{
  ArrayList<Piece> movedPieces; 
  int moveIndex = 0; 
  color prevColor; 
+
  
 
  ArrayList<Square> toDraw = new ArrayList(); 
@@ -126,17 +128,20 @@ showMoves();
         if(s == p.currentSquare){
          s.piece = p; 
          p.moving = false; 
-         movingPiece = false; 
+         movingPiece = false;
+         sf_move.play(); 
         }
                   
         if (validSquare && p.enemyPieceOnSquare(s)){
           p.captureOn(s);  
           movingPiece = false; 
+          sf_capture.play(); 
            
          } 
          if(validSquare){
            p.move(s); 
            movingPiece = false; 
+           sf_move.play(); 
            
          }
        
