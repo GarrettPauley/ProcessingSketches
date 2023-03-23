@@ -1,4 +1,6 @@
 import java.util.*;
+ SoundFile sf_capture;
+ SoundFile sf_move; 
 
 int ADJACENT = 8; 
 int DIAGONAL_LEFT = 9; 
@@ -11,7 +13,8 @@ void setup(){
  size(720, 720);
  //imageMode(CENTER); 
  game = new Game(); 
- 
+ sf_capture = new SoundFile(this, "Resources/public_sound_standard_Capture.mp3"); 
+ sf_move = new SoundFile(this, "Resources/public_sound_standard_Move.mp3"); 
 
 
 }

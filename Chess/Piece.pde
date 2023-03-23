@@ -5,13 +5,8 @@ abstract class Piece{
   List<Integer> bottomEdgeIndexes = Arrays.asList(56, 48, 40, 32, 24, 16, 8, 0); 
   List<Integer> blackStartingSquares  = Arrays.asList(0,1,8,9,16,17,24,25,32,33,40,41,48,49,56,57);
   
-  
-  
- 
-  
   ArrayList<Integer> moveIndexes; 
   ChessBoard board; 
-  
   
   float x, y; 
   int h; 
