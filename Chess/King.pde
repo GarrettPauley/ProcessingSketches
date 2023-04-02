@@ -110,7 +110,7 @@ class King extends Piece{
    ArrayList<Integer> legalMoves(){
     moveIndexes.clear(); 
     addKingMoves(); 
-    //removeOccupiedSquares();  
+    removeOccupiedSquares();  
     return moveIndexes; 
     
   }
