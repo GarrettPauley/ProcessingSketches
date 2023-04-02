@@ -2,7 +2,7 @@
 import java.util.stream.Collectors; 
 import processing.sound.*; 
 class Game{
-
+ 
  ArrayList<Square> squares; 
  ChessBoard board;
  boolean movingPiece;
@@ -49,14 +49,10 @@ class Game{
  
 showMoves();
   
-
-  
  if(keyPressed && keyCode == LEFT){
   undo(); 
   
-  
  }
- 
   if(keyPressed && key == 'r' ){
   
   startingPosition(); 
@@ -70,28 +66,22 @@ showMoves();
   
   drawArrow();
   
-
   
-     
-  
-  
-  
-   
  } // End of run() method. 
  
  
  void checkForMovingPieces(){
    Square s = getSquareUnderMouse(); 
   
-     if(s != null && s.piece != null && movingPiece == false){
+     if(s != null && s.getPiece() != null && movingPiece == false){
        
         print("clicking on Square " + s.name + '\n');
         movingPiece = true;
    
-         Piece p = s.piece; 
+         Piece p = s.getPiece(); 
          p.moving = true;
      
-         s.piece = null;
+         s.setPiece(null);
          
          }
        
@@ -121,12 +111,13 @@ showMoves();
  void placePieceAfterMovement(){
  
        Square s = getSquareUnderMouse(); 
-       Piece p = getMovingPiece();
-       
-     Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index));  
+       Piece p = getMovingPiece(); //<>//
+     
+     Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index)); //<>//
+     
      
         if(s == p.currentSquare){
-         s.piece = p; 
+         s.setPiece(p); 
          p.moving = false; 
          movingPiece = false;
          sf_move.play(); 
@@ -144,6 +135,7 @@ showMoves();
            sf_move.play(); 
            
          }
+     
        
    }
    
@@ -167,7 +159,7 @@ showMoves();
  void startingPosition(){
    
    for(Square s: board.squares){
-     s.piece = null; 
+     s.setPiece(null); 
    }
    
    for(Piece p: board.capturedPieces){
@@ -190,12 +182,8 @@ showMoves();
 void debugMessages(){
    textSize(20);
      fill(255,0,0); 
-
      for(Square s : squares){
-  
-        
         text(s.index, s.center.x, s.center.y);
-      
      }
      
 }
@@ -220,28 +208,22 @@ Square getSquareUnderMouse(){
 
 void drawArrow(){
    
-   if(mousePressed && (mouseButton == RIGHT) && (keyPressed && key == 'a') ){
-     
+   if(mousePressed && (mouseButton == RIGHT) && (keyPressed && key == 'a') ){     
     if(getSquareUnderMouse() != null){
-      
-      toDraw.add(getSquareUnderMouse()); 
-      
+      toDraw.add(getSquareUnderMouse());     
      }
-  
    
-    
     Square s1 = toDraw.get(0); 
     Square s2 = toDraw.get(toDraw.size() - 1); 
     
       stroke(0,0,255); 
       strokeWeight(7);
       fill(0,0,255); 
-     pushMatrix(); 
-      line(s1.center.x, s1.center.y, s2.center.x, s2.center.y);
-      translate(s2.center.x, s2.center.y); 
-      ellipse(0,0, 10,10);
-      
-    popMatrix();
+      pushMatrix(); 
+        line(s1.center.x, s1.center.y, s2.center.x, s2.center.y);
+        translate(s2.center.x, s2.center.y); 
+        ellipse(0,0, 10,10);
+      popMatrix();
     
     
   
