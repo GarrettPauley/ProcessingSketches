@@ -95,6 +95,10 @@ class Square {
     
   }
   
+  Piece getPiece(){
+   return this.piece;  
+  }
+  
   int getSquareIndex(){
    return this.index; 
   }

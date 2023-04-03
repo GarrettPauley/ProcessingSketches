@@ -13,6 +13,7 @@ void setup(){
  size(720, 720);
  //imageMode(CENTER); 
  game = new Game(); 
+
  sf_capture = new SoundFile(this, "Resources/public_sound_standard_Capture.mp3"); 
  sf_move = new SoundFile(this, "Resources/public_sound_standard_Move.mp3"); 
 
