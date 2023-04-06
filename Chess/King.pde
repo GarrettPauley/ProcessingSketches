@@ -124,6 +124,10 @@ class King extends Piece{
   void setInCheck(boolean _inCheck){
    this.inCheck = _inCheck; 
   }
+  
+  void removeSquaresUnderAttack(){
+                         
+  }
 
   
   

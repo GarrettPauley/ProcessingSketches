@@ -19,6 +19,7 @@ abstract class Piece{
   Square startingSquare; 
   ArrayList<Square> previousSquares;
   ArrayList<Square> legalMoves;
+  boolean inCheck; 
  
   
   
@@ -127,8 +128,8 @@ void moveToSquare(Square s){
    List<Integer> occupied; 
    if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
    else   occupied = board.getSquareswithWhitePieces();
-   
-     for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>//
+    //<>//
+     for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>// //<>//
       if(occupied.contains(moveIndexes.get(i))){ //<>//
        moveIndexes.remove(i);  
       }
@@ -206,11 +207,10 @@ void moveToSquare(Square s){
        
        boolean openLines = true; 
        
-      while( openLines  && (start + (offset * counter)) < 64 && (start + (offset * counter)) >= 0 ){ 
-        
+      // Find all the open spaces on diagonal.  
+      while( openLines  && (start + (offset * counter)) < 64 && (start + (offset * counter)) >= 0 ){  
        Square nextSquare = board.getSquareByIndex(start + (offset * counter));
-       
-         // Find all the open spaces on vertical or horizontal line (depending  on offset provided) 
+
          if(nextSquare.piece == null && onSameDiagonal(currentSquare, nextSquare)){
           moveIndexes.add(nextSquare.index); 
           counter++; 
@@ -229,8 +229,16 @@ void moveToSquare(Square s){
          }
       }
    
-} 
+}
+
+
+    boolean getInCheck(){
+    return this.inCheck; 
+  } 
   
+  void setInCheck(boolean _inCheck){
+   this.inCheck = _inCheck; 
+  }
   
 
 abstract ArrayList<Integer> legalMoves(); 

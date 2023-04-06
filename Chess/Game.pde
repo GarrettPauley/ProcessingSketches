@@ -4,6 +4,8 @@ import processing.sound.*;
 class Game{
  
  ArrayList<Square> squares; 
+ ArrayList<Square> squaresUnderAttackByWhite =  new ArrayList();
+ ArrayList<Square> squaresUnderAttackByBlack; 
  ChessBoard board;
  boolean movingPiece;
  Boolean whiteToMove; 
@@ -21,7 +23,9 @@ class Game{
  Game(){ 
    board = new ChessBoard(1);
    squares = board.squares; 
-   whiteToMove = true; 
+   whiteToMove = true;  
+   
+   squaresUnderAttackByBlack = new ArrayList();
    movedPieces = new ArrayList<Piece>(); 
    finishedMoving = true; 
    moveIndexesToRemove =  new ArrayList<Integer>(); 
@@ -47,7 +51,8 @@ class Game{
       p.display();
           
  }
- 
+ updateSquaresAttackedByWhite();
+print(squaresUnderAttackByWhite + "\n"); 
 showMoves();
 
 if(isEnemyKingInCheck()){
@@ -129,6 +134,9 @@ void checkForMovingPieces(){
           p.captureOn(s);  
           movingPiece = false; 
           sf_capture.play();
+          if(isEnemyKingInCheck()){
+           showCheck();  
+            }
           nextPlayersTurn(); 
            
          } 
@@ -237,19 +245,33 @@ Boolean isEnemyKingInCheck(){
  }
  
  
- 
- 
  else return false; 
- 
- 
+
   
 }
+
 
 void showCheck(){
   fill(255,0,0,60); // red with 60% opacity
   stroke(255,0,0); 
   ellipse(getKingLocation(!whiteToMove).center.x + 2, getKingLocation(!whiteToMove).center.y, 75,75); 
 }
+
+
+
+
+
+void updateSquaresAttackedByWhite(){
+  // null pointer exception
+  for(Piece p : board.pieces){
+   if(!p.isblackPiece){
+     squaresUnderAttackByWhite.addAll(p.legalMoves);  //<>//
+   }
+  }
+  
+}
+
+
 
 
 
