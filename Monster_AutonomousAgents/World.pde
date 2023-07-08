@@ -4,6 +4,7 @@ class World{
   ArrayList<Agent> agents; 
   ArrayList<Monster> monsters; 
   boolean gameActive = true; 
+  PVector middle = new PVector (width/2, height/2); 
   
   World(int num_agents, int num_monsters){
     agents = new ArrayList<Agent>(); 
@@ -12,6 +13,12 @@ class World{
      PVector randPos = new PVector(random(width - 10), random(height - 10)); 
      monsters.add(new Monster(randPos)); 
    }
+   
+   for(int i = 0; i < num_agents; i++){
+     PVector randPos = new PVector(random(width - 10), random(height - 10)); 
+     agents.add(new Agent(randPos)); 
+   }
+   
    getWanderingSpace();
     
   }
@@ -31,6 +38,16 @@ class World{
      m.update(); 
      m.display(); 
    }
+   
+    for(Agent a: agents){
+     
+     a.avoid(monsters);  
+     a.checkEdges();
+     a.update(); 
+     a.display(); 
+   }
+   
+   
   
   }
   

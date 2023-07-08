@@ -8,7 +8,7 @@ void setup(){
   textSize(30);
   fullScreen(); 
 
-  world = new World(5,20); 
+  world = new World(10,200); 
   target = new Target(random(width), random(height)); 
   
 } 
@@ -28,7 +28,7 @@ void draw(){
     target.y = random(height); 
    }
    
-   if(! world.gameActive){
+   if(!world.gameActive){
       noLoop(); 
     textSize(30); 
     fill(255,0,0); 

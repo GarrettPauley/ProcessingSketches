@@ -3,17 +3,21 @@ class Agent{
  PVector velocity; 
  PVector acceleration; 
  float maxSpeed; 
- float maxForce; 
+ float maxForce;
+ float mass; 
  int r;  
+ float G; 
 
  
  Agent(PVector pos){
   position = pos; 
-  velocity = new PVector(); 
+  velocity = new PVector(random(width), random(height)); 
   acceleration = new PVector(); 
   r = 10;
   maxSpeed = 5; 
   maxForce = 0.1; 
+  mass = 100;
+  G = 0.01; 
 
  }
  
@@ -44,7 +48,8 @@ class Agent{
   
   
   void update(){
-    velocity.add(acceleration); 
+    velocity.add(acceleration);
+    velocity.limit(maxSpeed);
     position.add(velocity); 
     acceleration.mult(0); 
   }
@@ -77,6 +82,34 @@ class Agent{
     applyForce(steerVelocity); 
     
   }
+  
+  void avoid(ArrayList<Monster> monsters) { 
+    
+    float tooClose = 30.0f; 
+    
+    for(Monster m: monsters){ 
+      float d = PVector.dist(position, m.position); 
+      if(d <= tooClose){ 
+    PVector currentVelocity = velocity.copy(); 
+    PVector targetVelocity = PVector.sub(position,m.position); 
+    
+    PVector steerVelocity = PVector.sub(targetVelocity, currentVelocity);
+    
+     float distance = targetVelocity.mag(); 
+     float strength = ( (G * mass * mass) / (distance * distance) ); 
+    steerVelocity.normalize(); 
+ 
+    // Move in that direction without exceeding maxSpeed
+     steerVelocity.mult(strength); 
+    
+    //steerVelocity.limit(maxForce); 
+    applyForce(steerVelocity); 
+      }
+    }
+    
+  }
+  
+
   
  void arrive(PVector target){
    PVector desired = PVector.sub(target,position); 
@@ -119,6 +152,16 @@ void wander(ArrayList<PVector> locations){
   steer(locations.get(index)); 
   }
   
+  
+}
+
+
+
+void checkEdges(){
+ if(position.x < 0) position.x = width; 
+ else if (position.x > width) position.x = 0;
+ else if (position.y < 0) position.y = height; 
+ else if (position.y > height) position.y = 0; 
   
 }
   

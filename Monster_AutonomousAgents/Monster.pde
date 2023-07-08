@@ -38,8 +38,8 @@ class Monster{
    
    //Uncomment to show all the locations that the Monster can steer towards. 
    //for(PVector loc : locations){
-    //fill(0); 
-    //ellipse(loc.x, loc.y, 4,4); 
+   // fill(0); 
+   // ellipse(loc.x, loc.y, 4,4); 
    //}
    
    
