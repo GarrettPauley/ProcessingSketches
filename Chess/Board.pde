@@ -158,6 +158,18 @@ for(Piece p_: pieces){
  s.piece = p_; 
 }
    }
+   
+void resetBoard(){ 
+     pieces.clear(); 
+     capturedPieces.clear();  
+
+      for(Square s: squares){
+      s.setPiece(null); 
+   }
+   initPieces(); 
+   
+ 
+} 
 
 
 Square findSquareByName(String name){

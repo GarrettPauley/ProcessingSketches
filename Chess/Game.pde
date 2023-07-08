@@ -48,23 +48,8 @@ class Game{
  }
  
 showMoves();
-  
- if(keyPressed && keyCode == LEFT){
-  undo(); 
-  
- }
-  if(keyPressed && key == 'r' ){
-  
-  startingPosition(); 
-  
-   }
-   
-  if(mousePressed && (mouseButton == RIGHT) ){
-    if(getSquareUnderMouse() != null)
-     getSquareUnderMouse().drawCircleInSquare(); 
-  }
-  
-  drawArrow();
+drawArrow();
+checkForInputs(); 
   
   
  } // End of run() method. 
@@ -112,7 +97,11 @@ showMoves();
  
        Square s = getSquareUnderMouse(); 
        Piece p = getMovingPiece(); //<>//
-     
+       
+       if(s == null || p == null) { 
+         
+       } 
+    
      Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index)); //<>//
      
      
@@ -156,37 +145,24 @@ showMoves();
   }
  }
  
- void startingPosition(){
-   
-   for(Square s: board.squares){
-     s.setPiece(null); 
-   }
-   
-   for(Piece p: board.capturedPieces){
-    board.pieces.add(p);  
-   }
-   
-  for(Piece p : board.pieces){
-   p.move(p.startingSquare); 
-  }
-  
-  board.capturedPieces.clear(); 
+ void startingPosition(){   //<>//
+ movingPiece = false; 
+ board.resetBoard(); 
  }
  
 
- 
- 
- 
- 
+
  
 void debugMessages(){
    textSize(20);
      fill(255,0,0); 
      for(Square s : squares){
-        text(s.index, s.center.x, s.center.y);
+        text(s.piece.x, s.center.x, s.center.y);
      }
      
 }
+
+
 
 boolean moreThanOnePieceMoving(){
  return board.pieces.stream().filter(p -> p.moving == true).count() > 1; 
@@ -230,6 +206,25 @@ void drawArrow(){
     
   }
 
+  }
+  
+  void checkForInputs(){ 
+      
+ if(keyPressed && keyCode == LEFT){
+  undo(); 
+  
+ }
+  if(keyPressed && key == 'r' ){
+  
+  startingPosition(); 
+  
+   }
+   
+  if(mousePressed && (mouseButton == RIGHT) ){
+    if(getSquareUnderMouse() != null)
+     getSquareUnderMouse().drawCircleInSquare(); 
+  }
+  
   }
   
   
