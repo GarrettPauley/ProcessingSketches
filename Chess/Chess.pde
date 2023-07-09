@@ -63,10 +63,11 @@ Game game;
   public void draw() {
     background(255);
     fill(0);
-   textSize(30); 
+   textSize(20); 
    text("Moves: " +  game.movedPieces.size(), 20,20); 
    text("Captured Pieces: " +  game.board.capturedPieces.size(), 20,40);
-  
+  text("Number of Squares attacked by White: " +  game.squaresUnderAttackByWhite.size(), 20,60);
+  text("King in Check:  " +  game.isEnemyKingInCheck(), 20,80);
   }
 }
 
