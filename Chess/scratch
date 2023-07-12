@@ -1,0 +1,655 @@
+[GAME] 
+
+Square getEnemyKingLocation(){
+  String startingSquareOfEnemyKing = !whiteToMove ? "E8" : "E1"; 
+  return board.pieces.stream()
+          .filter(p -> p.startingSquare == board.findSquareByName(startingSquareOfEnemyKing))
+          .findFirst().get().currentSquare; 
+}
+
+Boolean isEnemyKingInCheck(){
+  
+      if(squaresUnderAttackByWhite.contains(getEnemyKingLocation())
+           || squaresUnderAttackByBlack.contains(getEnemyKingLocation())){ 
+       return true;  
+      }
+      return false; 
+    } 
+
+ 
+void updateSquaresAttackedByWhite(){
+  squaresUnderAttackByWhite.clear(); 
+  for(Piece p : board.pieces){ //<>//
+   if(!p.isblackPiece  && !(p instanceof Pawn)){
+    p.legalMoves(); 
+     for(int i: p.moveIndexes){ 
+      squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
+     }
+   }
+  }
+// TODO - add pawn attacks for white. 
+
+  print("Squares under attack by White");
+  for(Square s: squaresUnderAttackByWhite){ 
+    print(s.index + "\n"); 
+  }
+  
+   
+  
+}
+
+void updateSquaresAttackedByBlack(){
+  squaresUnderAttackByBlack.clear(); 
+  for(Piece p : board.pieces){
+   if(p.isblackPiece && !(p instanceof Pawn)){
+    p.legalMoves(); 
+     for(int i: p.moveIndexes){ 
+      squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
+     }
+   }
+  }
+
+
+
+[PAWN] 
+
+class Pawn extends Piece{
+  
+   boolean onLeftEdge = leftEdgeIndexes.contains(currentSquare.index);
+   boolean onRightEdge = rightEdgeIndexes.contains(currentSquare.index);
+  
+   Pawn(String imagePath, Square s, ChessBoard b){
+     super(imagePath, s, b); 
+     
+  }
+  
+  @Override
+  void move(Square s){
+        previousSquares.add(currentSquare);
+        s.piece = this;
+        currentSquare = s; 
+        
+        moveToSquare(s);
+     
+        game.movedPieces.add(this);
+        moving = false;
+         
+  }
+  
+  
+  
+  
+  @Override
+  ArrayList<Integer> legalMoves(){
+   
+   moveIndexes.clear();
+  
+     if(isblackPiece){
+       addblackPawnMoves();   
+        }
+     else{
+     addwhitePawnMoves();
+    }
+  return moveIndexes; 
+  }
+  
+  
+   
+  ArrayList<Integer> attackingMoves(){
+   moveIndexes.clear();
+  
+     if(isblackPiece){
+           if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index - 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index + 9); 
+    }
+      
+        }
+     else{
+           if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index + 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index - 9); 
+    }
+    }
+  return moveIndexes; 
+  }
+  
+  Boolean canAttackToRight(){
+    if(isblackPiece ){ 
+      if(!onRightEdge){
+      Square s = board.getSquareByIndex(currentSquare.index - 7);
+      if(s.piece != null){
+      boolean hasWhitePiece = (!(s.piece.isblackPiece));
+         if(hasWhitePiece ){
+           return true; 
+         }
+         else{
+           return false; 
+         }
+      }
+    }
+    }
+    
+    else{
+      if(!onLeftEdge){ 
+       Square s = board.getSquareByIndex(currentSquare.index + 7);
+      if(s.piece != null){
+      boolean hasBlackPiece = (s.piece.isblackPiece);
+         if(hasBlackPiece ){
+           return true; 
+         }
+         else{
+           return false; 
+         }
+      }
+      }
+      
+    }
+    return false; 
+  }
+  
+  Boolean canAttackToLeft(){
+       if(isblackPiece){
+        if(!onLeftEdge){ 
+        Square s = board.getSquareByIndex(currentSquare.index + 9);
+        if(s.piece != null){
+        boolean hasWhitePiece = (!(s.piece.isblackPiece));
+           if(hasWhitePiece ){
+             return true; 
+           }
+           else{
+             return false; 
+           }
+        }
+      }
+    }
+    else{
+      if(!onRightEdge){ 
+       Square s = board.getSquareByIndex(currentSquare.index - 9);
+      if(s.piece != null){
+      boolean hasBlackPiece = (s.piece.isblackPiece);
+         if(hasBlackPiece ){
+           return true; 
+         }
+         else{
+           return false; 
+         }
+      }
+      }
+    }
+    
+    
+    return false; 
+    
+  }
+  
+  
+  void removeOccupiedSquares(){
+   List<Integer> occupied; 
+   if(isblackPiece) occupied =  board.getSquareswithWhitePieces();
+   else   occupied = board.getSquareswithWhitePieces();
+   
+     for(int i = 0; i < moveIndexes.size(); i++){
+      if(occupied.contains(moveIndexes.get(i))){
+       moveIndexes.remove(i);  
+      }
+     }
+   
+  }
+  
+  
+ void  addwhitePawnMoves(){
+     if(onStart() && noPieceInFront() && noPieceTwoSquaresInFront()){
+      moveIndexes.add(currentSquare.index - 2);
+      moveIndexes.add(currentSquare.index - 1);
+    }
+    
+     if(onStart() && noPieceInFront()&& !noPieceTwoSquaresInFront()){
+       moveIndexes.add(currentSquare.index - 1);
+    }
+    
+      
+    if(!onStart() && noPieceInFront()){
+       moveIndexes.add(currentSquare.index - 1);
+    }
+    
+    
+    if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index + 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index - 9); 
+    }
+    
+    
+       
+   }
+     
+  
+ 
+  
+  
+  void addblackPawnMoves(){
+    
+    if(onStart() && noPieceInFront() && noPieceTwoSquaresInFront()){
+      moveIndexes.add(currentSquare.index + 2);
+      moveIndexes.add(currentSquare.index + 1);
+    }
+    
+    if(onStart() && noPieceInFront()&& !noPieceTwoSquaresInFront()){
+      moveIndexes.add(currentSquare.index + 1);
+    }
+    
+    
+    if(!onStart() && noPieceInFront()){
+       moveIndexes.add(currentSquare.index + 1);
+    }
+    
+    
+     if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index - 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index + 9); 
+    }
+    
+
+    
+  }
+  
+  boolean onStart(){
+    return  currentSquare.index == startingSquare.index;
+  }
+  
+  boolean noPieceInFront(){
+    if(isblackPiece){ 
+      Square s = board.getSquareByIndex(currentSquare.index + 1);
+      if(s.piece == null) return true; 
+      else return false; 
+    }
+    else{
+      Square s = board.getSquareByIndex(currentSquare.index - 1);
+      if(s.piece == null) return true; 
+      else return false;   
+    }
+      
+
+  }
+  
+    boolean noPieceTwoSquaresInFront(){
+    if(isblackPiece){ 
+      Square s = board.getSquareByIndex(currentSquare.index + 2);
+      if(s.piece == null) return true; 
+      else return false; 
+    }
+    else{
+      Square s = board.getSquareByIndex(currentSquare.index - 2);
+      if(s.piece == null) return true; 
+      else return false;   
+    }
+      
+
+  }
+  
+  
+  
+}
+
+
+[FULL GAME CLASS] 
+
+
+import java.util.stream.Collectors; 
+import processing.sound.*; 
+class Game{
+ 
+ ArrayList<Square> squares; 
+ ArrayList<Square> squaresUnderAttackByWhite; 
+ ArrayList<Square> squaresUnderAttackByBlack;  
+ ChessBoard board;
+ boolean movingPiece;
+ Boolean whiteToMove; 
+ ArrayList<Piece> movedPieces;
+ ArrayList<Square> toDraw = new ArrayList(); 
+ 
+
+ 
+ Game(){ 
+   board = new ChessBoard(1);
+   squares = board.squares; 
+   whiteToMove = true;  
+   
+   squaresUnderAttackByWhite = new ArrayList();
+   squaresUnderAttackByBlack = new ArrayList();
+   movedPieces = new ArrayList<Piece>(); 
+    
+   
+   
+   
+ }
+  
+  
+  
+
+   
+  
+  
+ void run(){
+   
+    // display squares
+    for(Square s: board.squares){
+         s.display();
+         debugMessages();
+             
+    }          
+     for( Piece p: board.pieces){
+      
+      p.display();
+          
+ }
+ //updateSquaresAttackedByWhite();
+//print(squaresUnderAttackByWhite + "\n"); 
+showMoves();
+
+drawArrow();
+checkForInputs(); 
+
+
+if(isEnemyKingInCheck()){
+ showCheck();  
+}
+
+
+  
+ } // End of run() method. 
+ 
+ 
+void checkForMovingPieces(){
+   Square s = getSquareUnderMouse(); 
+
+     
+     if(s != null && s.getPiece() != null && movingPiece == false && whiteToMove != s.getPiece().isblackPiece){
+        print("clicking on Square " + s.name + '\n');
+        movingPiece = true;
+
+         Piece p = s.getPiece(); 
+         p.moving = true;
+
+         s.setPiece(null);
+
+         }
+     }
+
+ 
+ void showMoves(){
+   if(getMovingPiece() != null){
+   Piece p = getMovingPiece();
+   for(int loc : p.legalMoves()){
+     fill(50); 
+     Square s = board.getSquareByIndex(loc); 
+     ellipse(s.center.x, s.center.y, 10,10); 
+     
+   }
+   }
+ }
+ 
+ 
+ 
+ 
+  //<>//
+ void placePieceAfterMovement(){
+ 
+       Square s = getSquareUnderMouse(); 
+       Piece p = getMovingPiece(); //<>//
+       
+      //<>//
+     Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index)); //<>//
+     
+     
+        if(s == p.currentSquare){
+         s.setPiece(p); 
+         p.moving = false;  
+         movingPiece = false;
+         sf_move.play();  
+        }
+                  
+        if (validSquare && p.enemyPieceOnSquare(s)){
+          p.captureOn(s);  
+          movingPiece = false; 
+          sf_capture.play();
+          if(isEnemyKingInCheck()){
+           showCheck();  
+            }
+          nextPlayersTurn(); 
+           
+         } 
+         else if (validSquare){
+           p.move(s); 
+           movingPiece = false; 
+           sf_move.play(); 
+           nextPlayersTurn(); 
+           
+         }
+         
+ 
+     
+       
+   }
+   
+  
+   
+ 
+ 
+ 
+ void undo(){
+  
+  if(movedPieces.size() > 0){
+  Piece p =  movedPieces.get(movedPieces.size() - 1);
+  p.movetoPreviousSquare();  //<>//
+  movedPieces.remove(p); 
+  
+  }
+ }
+ 
+
+ void startingPosition(){ 
+ movingPiece = false; 
+ board.resetBoard();
+ whiteToMove = true;
+
+ }
+ 
+
+
+ 
+void debugMessages(){
+   textSize(20);
+     fill(255,0,0); 
+     for(Square s : squares){
+        text(s.index, s.center.x, s.center.y);
+     }
+     
+}
+
+
+
+boolean moreThanOnePieceMoving(){
+ return board.pieces.stream().filter(p -> p.moving == true).count() > 1; 
+}
+
+ long numberOfPiecesMoving(){
+ return board.pieces.stream().filter(p -> p.moving == true).count();  
+}
+
+Piece getMovingPiece(){
+  return board.pieces.stream().filter(p -> p.moving == true).findFirst().orElse(null);  
+  
+}
+
+Square getSquareUnderMouse(){
+ return squares.stream().filter(s -> s.isClicked() == true).findFirst().orElse(null);   
+}
+
+void nextPlayersTurn(){
+ if(whiteToMove == true) whiteToMove = false; 
+ else whiteToMove = true;
+ updateSquaresAttackedByWhite();
+ updateSquaresAttackedByBlack();
+}
+
+
+Square getEnemyKingLocation(){
+  String startingSquareOfEnemyKing = !whiteToMove ? "E8" : "E1"; 
+  return board.pieces.stream()
+          .filter(p -> p.startingSquare == board.findSquareByName(startingSquareOfEnemyKing))
+          .findFirst().get().currentSquare; 
+}
+
+Boolean isEnemyKingInCheck(){
+  
+      if(squaresUnderAttackByWhite.contains(getEnemyKingLocation())
+           || squaresUnderAttackByBlack.contains(getEnemyKingLocation())){ 
+       return true;  
+      }
+      return false; 
+    } 
+
+ 
+
+void showCheck(){
+  fill(255,0,0,60); // red with 60% opacity
+  stroke(255,0,0); 
+  ellipse(getEnemyKingLocation().center.x + 2, getEnemyKingLocation().center.y, 75,75); 
+}
+
+
+
+
+
+void updateSquaresAttackedByWhite(){
+  squaresUnderAttackByWhite.clear(); 
+  for(Piece p : board.pieces){ //<>//
+   if(!p.isblackPiece  && !(p instanceof Pawn)){
+    p.legalMoves(); 
+     for(int i: p.moveIndexes){ 
+      squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
+     }
+   }
+  }
+// TODO - add pawn attacks for white. 
+
+  print("Squares under attack by White");
+  for(Square s: squaresUnderAttackByWhite){ 
+    print(s.index + "\n"); 
+  }
+  
+   
+  
+}
+
+void updateSquaresAttackedByBlack(){
+  squaresUnderAttackByBlack.clear(); 
+  for(Piece p : board.pieces){
+   if(p.isblackPiece && !(p instanceof Pawn)){
+    p.legalMoves(); 
+     for(int i: p.moveIndexes){ 
+      squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
+     }
+   }
+  }
+   print("Squares under attack by Black");
+  for(Square s: squaresUnderAttackByBlack){ 
+    print(s.index + "\n"); 
+  }
+  
+}
+
+
+
+void drawArrow(){
+   
+   if(mousePressed && (mouseButton == RIGHT) && (keyPressed && key == 'a') ){     
+    if(getSquareUnderMouse() != null){
+      toDraw.add(getSquareUnderMouse());     
+     }
+   
+    Square s1 = toDraw.get(0); 
+    Square s2 = toDraw.get(toDraw.size() - 1); 
+    
+      stroke(0,0,255); 
+      strokeWeight(7);
+      fill(0,0,255); 
+      pushMatrix(); 
+        line(s1.center.x, s1.center.y, s2.center.x, s2.center.y);
+        translate(s2.center.x, s2.center.y); 
+        ellipse(0,0, 10,10);
+      popMatrix(); 
+     }
+  }
+
+
+  void checkForInputs(){ 
+      
+ if(keyPressed && keyCode == LEFT){
+  undo(); 
+  
+ }
+  if(keyPressed && key == 'r' ){
+  
+  startingPosition(); 
+  
+   }
+   
+  if(mousePressed && (mouseButton == RIGHT) ){
+    if(getSquareUnderMouse() != null)
+     getSquareUnderMouse().drawCircleInSquare(); 
+    }
+  }
+  
+} // END Game class
+  
+
+  
+  
+  
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+   
+ 
+ 
+ 
+
+   
+  
+   
+
+
+ 
+ 
+  

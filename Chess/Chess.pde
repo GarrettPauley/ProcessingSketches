@@ -13,7 +13,6 @@ void setup(){
  size(720, 720);
  //imageMode(CENTER); 
  game = new Game(); 
-
  sf_capture = new SoundFile(this, "Resources/public_sound_standard_Capture.mp3"); 
  sf_move = new SoundFile(this, "Resources/public_sound_standard_Move.mp3");
  
@@ -63,11 +62,12 @@ Game game;
   public void draw() {
     background(255);
     fill(0);
-   textSize(20); 
+   textSize(30); 
    text("Moves: " +  game.movedPieces.size(), 20,20); 
    text("Captured Pieces: " +  game.board.capturedPieces.size(), 20,40);
-  text("Number of Squares attacked by White: " +  game.squaresUnderAttackByWhite.size(), 20,60);
-  text("King in Check:  " +  game.isEnemyKingInCheck(), 20,80);
+   text("Squares attacked by white: " +  game.squaresUnderAttackByWhite.size(), 20,40);
+   
+  
   }
 }
 

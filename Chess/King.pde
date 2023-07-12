@@ -1,9 +1,7 @@
 class King extends Piece{
-  Boolean inCheck; 
   
    King(String imagePath, Square s, ChessBoard b){
-     super(imagePath, s, b);
-     inCheck = false; 
+     super(imagePath, s, b); 
      
   }
   
@@ -117,17 +115,6 @@ class King extends Piece{
     
   }
   
-    boolean getInCheck(){
-    return this.inCheck; 
-  } 
-  
-  void setInCheck(boolean _inCheck){
-   this.inCheck = _inCheck; 
-  }
-  
-  void removeSquaresUnderAttack(){
-                         
-  }
 
   
   
