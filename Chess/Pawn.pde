@@ -22,7 +22,32 @@ class Pawn extends Piece{
   }
   
   
+   
+  ArrayList<Integer> attackingMoves(){
+   moveIndexes.clear();
   
+     if(isblackPiece){
+           if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index - 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index + 9); 
+    }
+      
+        }
+     else{
+           if(canAttackToRight()){
+      moveIndexes.add(currentSquare.index + 7); 
+    }
+    
+     if(canAttackToLeft()){
+      moveIndexes.add(currentSquare.index - 9); 
+    }
+    }
+  return moveIndexes; 
+  }
+
   
   @Override
   ArrayList<Integer> legalMoves(){

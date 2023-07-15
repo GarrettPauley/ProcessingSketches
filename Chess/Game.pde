@@ -9,6 +9,7 @@ class Game{
  ChessBoard board;
  boolean movingPiece;
  boolean whiteToMove; 
+ boolean debug = true; 
  ArrayList<Piece> movedPieces; 
  int moveIndex = 0; 
  color prevColor; 
@@ -53,7 +54,8 @@ class Game{
           
  }
 if(isEnemyKingInCheck()){ 
- showCheck();  
+ showCheck();
+ enforceCheck(); 
 }
 showMoves();
 drawArrow();
@@ -63,31 +65,58 @@ checkForInputs();
  } // End of run() method. 
  
  
+
+ 
+ 
  void checkForMovingPieces(){
    Square s = getSquareUnderMouse(); 
   
      if(s != null && s.getPiece() != null && movingPiece == false){
-       
-        print("clicking on Square " + s.name + '\n');
-        movingPiece = true;
-   
+         movingPiece = true;
          Piece p = s.getPiece(); 
          p.moving = true;
-     
          s.setPiece(null);
-         
          }
-       
  }
+ 
+  void placePieceAfterMovement(){
+ 
+       Square s = getSquareUnderMouse(); 
+       Piece p = getMovingPiece(); //<>//
+       
+       if(s != null &&  p != null) { 
+         Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index)); //<>//
+        
+    
+        if(s == p.currentSquare){
+         s.setPiece(p); 
+         p.moving = false; 
+         movingPiece = false;
+         
+        }
+                  
+        if (validSquare && p.enemyPieceOnSquare(s)){
+          p.captureOn(s);   //<>//
+          movingPiece = false; 
+          sf_capture.play();
+          nextPlayersTurn(); 
+            //<>//
+         } 
+         if(validSquare){ //<>//
+           p.move(s);  //<>//
+           movingPiece = false; 
+           sf_move.play(); 
+          nextPlayersTurn();  
+         }
+     
+       }   
+   }
+ 
  
  void showMoves(){
    if(getMovingPiece() != null){
    Piece p = getMovingPiece();
-   //print( "Legal moves from " + p.currentSquare.name +  " " + p.legalMoves() + '\n');
-   //print( "PreviousSquares for " + p.currentSquare.name + " " +  '\n');
-   //for(Square s: p.previousSquares){
-     //print(s.index); 
-   //}
+
    for(int loc : p.legalMoves()){
      fill(50); 
      Square s = board.getSquareByIndex(loc); 
@@ -96,14 +125,14 @@ checkForInputs();
    }
    }
  }
-  //<>//
+ 
  Square getEnemyKingLocation(){
   String startingSquareOfEnemyKing = !whiteToMove ? "E8" : "E1"; 
   return board.pieces.stream()
-          .filter(p -> p.startingSquare == board.findSquareByName(startingSquareOfEnemyKing)) //<>//
+          .filter(p -> p.startingSquare == board.findSquareByName(startingSquareOfEnemyKing))
           .findFirst().get().currentSquare; 
-} //<>//
-  //<>//
+}
+ 
  
  Boolean isEnemyKingInCheck(){
   
@@ -115,42 +144,8 @@ checkForInputs();
     } 
  
  
- void placePieceAfterMovement(){
- 
-       Square s = getSquareUnderMouse(); 
-       Piece p = getMovingPiece(); //<>//
-       
-       if(s == null || p == null) { 
-         
-       } 
-    
-     Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index)); //<>//
-     
-     
-        if(s == p.currentSquare){
-         s.setPiece(p); 
-         p.moving = false; 
-         movingPiece = false;
-         sf_move.play(); 
-        }
-                  
-        if (validSquare && p.enemyPieceOnSquare(s)){
-          p.captureOn(s);  
-          movingPiece = false; 
-          sf_capture.play();
-          nextPlayersTurn(); 
-           
-         } 
-         if(validSquare){
-           p.move(s); 
-           movingPiece = false; 
-           sf_move.play(); 
-          nextPlayersTurn();   //<>//
-         }
-     
-       
-   }
-   
+
+    //<>//
   
    
  
@@ -202,13 +197,14 @@ void updateSquaresAttackedByWhite(){
       squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
      }
    }
+   else if (!p.isblackPiece && (p instanceof Pawn)){ 
+     for(int i: ((Pawn) p).attackingMoves()){ 
+       squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
+     } 
+   }
   }
-// TODO - add pawn attacks for white. 
 
-  print("Squares under attack by White");
-  for(Square s: squaresUnderAttackByWhite){ 
-    print(s.index + "\n"); 
-  }
+
   
    
   
@@ -223,12 +219,17 @@ void updateSquaresAttackedByBlack(){
       squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
      }
    }
+    else if (p.isblackPiece && (p instanceof Pawn)){ 
+     for(int i: ((Pawn) p).attackingMoves()){ 
+       squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
+     } 
+   }
   }
    print("Squares under attack by Black");
   for(Square s: squaresUnderAttackByBlack){ 
     print(s.index + "\n"); 
-  }
-   //<>//
+  } //<>//
+  
 }
 
 void showCheck(){
@@ -282,6 +283,22 @@ void drawArrow(){
 
   }
   
+  void showAttackingMoves(Piece p){
+    
+    if(p instanceof Pawn){ 
+     for(int i: ((Pawn) p).attackingMoves()){ 
+      board.getSquareByIndex(i).drawCircleInSquare();  
+     }
+    }
+    
+    else{ 
+      for(int i: p.legalMoves()){ 
+      board.getSquareByIndex(i).drawCircleInSquare();  
+     }
+    }
+    
+  }
+  
   void checkForInputs(){ 
       
  if(keyPressed && keyCode == LEFT){
@@ -294,17 +311,27 @@ void drawArrow(){
   
    }
    
-  if(mousePressed && (mouseButton == RIGHT) ){
-    if(getSquareUnderMouse() != null)
-     getSquareUnderMouse().drawCircleInSquare(); 
+  //if(mousePressed && (mouseButton == RIGHT) ){
+  //  if(getSquareUnderMouse() != null)
+  //   getSquareUnderMouse().drawCircleInSquare(); 
+  //}
+  
+   if(mousePressed && (mouseButton == RIGHT) ){
+    if(getSquareUnderMouse() != null){
+     Square s = getSquareUnderMouse();
+     if(s.piece != null){
+     showAttackingMoves(s.piece);
+     }
+    
   }
   
   }
-  
-  
- 
-  
+    
 }
+
+
+}
+
 
 
 

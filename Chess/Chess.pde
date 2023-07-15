@@ -65,7 +65,7 @@ Game game;
    textSize(30); 
    text("Moves: " +  game.movedPieces.size(), 20,20); 
    text("Captured Pieces: " +  game.board.capturedPieces.size(), 20,40);
-   text("Squares attacked by white: " +  game.squaresUnderAttackByWhite.size(), 20,40);
+   text("Squares attacked by white: " +  game.squaresUnderAttackByWhite.size(), 20,60);
    
   
   }
