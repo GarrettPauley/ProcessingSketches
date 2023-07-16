@@ -96,32 +96,56 @@ checkForInputs();
  
  
  boolean resolvesCheck(Square s){ 
-  Square kingLocation = getKingLocation();  //<>//
+  //Square kingLocation = getKingLocation();  //<>//
   if(kingInCheck == false) return true; 
   else{ 
     if(isEscapeSquareForKing(s)){
-      return true;  //<>//
-    }
+      kingInCheck = false;  //<>//
+      return true; 
+    } //<>//
   } //<>//
-  return false;  //<>//
+  return false; 
+ }
+ 
+ boolean movePlacesSelfInCheck(Square s, Piece p){ 
+   if ( (p instanceof King) && !isEscapeSquareForKing(s) ) { 
+  return true;  
+ }
+
+return false; 
+   
+ }
+ 
+ 
+ boolean satisfiesConstraints(Square s, Piece p){ 
+   if (resolvesCheck(s) && !movePlacesSelfInCheck(s, p)) return true; 
+   return false; 
+  
  }
  
   void placePieceAfterMovement(){
  
        Square s = getSquareUnderMouse(); 
-       Piece p = getMovingPiece(); //<>//
-       
-       if(s != null &&  p != null) { 
-         Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index) && resolvesCheck(s)); //<>//
+       Piece p = getMovingPiece();
+       move_capture_stay(s, p); 
+     
         
     
+   
+     
+       }   
+   
+ 
+ void move_capture_stay(Square s, Piece p){ 
+    if(s != null &&  p != null) { 
+        Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index) && satisfiesConstraints(s, p) );
         if(s == p.currentSquare){
          s.setPiece(p); 
          p.moving = false; 
          movingPiece = false;
          
         }
-                  
+                   //<>//
         if (validSquare && p.enemyPieceOnSquare(s)){
           p.captureOn(s);  
           movingPiece = false; 
@@ -135,17 +159,15 @@ checkForInputs();
            sf_move.play(); 
           nextPlayersTurn();  
          }
-     
-       }   
    }
- 
+ }
  
  void showMoves(){
    if(getMovingPiece() != null){
    Piece p = getMovingPiece();
 
    for(int loc : p.legalMoves()){
-     fill(50);  //<>//
+     fill(50); 
      Square s = board.getSquareByIndex(loc); 
      ellipse(s.center.x, s.center.y, 10,10); 
      
@@ -186,7 +208,7 @@ checkForInputs();
  
  
  void undo(){
-  
+ // move the last moved piece back to it's previous square.  
   if(movedPieces.size() > 0){
   Piece p =  movedPieces.get(movedPieces.size() - 1);
   p.movetoPreviousSquare(); 
@@ -206,7 +228,7 @@ checkForInputs();
 
  
 void debugMessages(){
-   textSize(20);
+   textSize(20); //<>//
      fill(255,0,0); 
      for(Square s : squares){
         text(s.piece.x, s.center.x, s.center.y);
@@ -228,7 +250,7 @@ void updateSquaresAttackedByWhite(){
    if(!p.isblackPiece  && !(p instanceof Pawn)){
     p.legalMoves(); 
      for(int i: p.moveIndexes){ 
-      squaresUnderAttackByWhite.add(board.getSquareByIndex(i));  //<>//
+      squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
      }
    }
    else if (!p.isblackPiece && (p instanceof Pawn)){ 

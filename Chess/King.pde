@@ -91,6 +91,7 @@ class King extends Piece{
     moveIndexes.add(currentSquare.index - DIAGONAL_LEFT );
      
    }
+ }
    
    // Does not behave as expected. 
    //for(Square s: board.squares){
@@ -103,19 +104,49 @@ class King extends Piece{
    //}
    
    
+     
+  void removeAttackedSquares(){
+    
+   //  List<Integer> occupied; 
+   //if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
+   //else   occupied = board.getSquareswithWhitePieces();
+   //  for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>//
+   //   if(occupied.contains(moveIndexes.get(i))){ //<>//
+   //    moveIndexes.remove(i);  
+   //   }
+   //  }
+       
+   if(isblackPiece){
+     // remove the squares attacked by White. 
+      for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
+      if(game.squaresUnderAttackByWhite.contains( board.getSquareByIndex(moveIndexes.get(i) ))){
+        moveIndexes.remove(i);
+      }
+      }
+   }
+   else { 
+   // remove the squares attacked by Black. 
+      for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
+      if(game.squaresUnderAttackByBlack.contains( board.getSquareByIndex(moveIndexes.get(i) ))){
+        moveIndexes.remove(i);
+      }
+      }
+      
+    }
+
+  }
    
    
- }
+
    @Override
    ArrayList<Integer> legalMoves(){
     moveIndexes.clear(); 
     addKingMoves(); 
-    removeOccupiedSquares();  
+    removeOccupiedSquares();
+    removeAttackedSquares();
     return moveIndexes; 
     
   }
   
-
-  
-  
 }
+  

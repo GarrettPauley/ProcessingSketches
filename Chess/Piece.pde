@@ -127,10 +127,9 @@ void moveToSquare(Square s){
    List<Integer> occupied; 
    if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
    else   occupied = board.getSquareswithWhitePieces();
-   
      for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>//
-      if(occupied.contains(moveIndexes.get(i))){ //<>//
-       moveIndexes.remove(i);  
+      if(occupied.contains(moveIndexes.get(i))){ //<>// //<>//
+       moveIndexes.remove(i);   //<>//
       }
      }
       
