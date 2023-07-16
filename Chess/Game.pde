@@ -4,8 +4,8 @@ import processing.sound.*;
 class Game{
  
  ArrayList<Square> squares; 
-  ArrayList<Square> squaresUnderAttackByWhite; 
- ArrayList<Square> squaresUnderAttackByBlack;  
+  ArrayList<Integer> squaresUnderAttackByWhite; 
+ ArrayList<Integer> squaresUnderAttackByBlack;  
  ChessBoard board;
  boolean movingPiece;
  boolean whiteToMove; 
