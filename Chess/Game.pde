@@ -74,7 +74,13 @@ checkForInputs();
  void checkForMovingPieces(){
    Square s = getSquareUnderMouse(); 
   
-     if(s != null && s.getPiece() != null && movingPiece == false){
+     
+     if(s != null 
+         && s.getPiece() != null 
+         && s.getPiece().isblackPiece == !whiteToMove 
+         && movingPiece == false){
+         // clicked on a square with a piece that matches the color of the turn. (black or white).    
+           
          movingPiece = true;
          Piece p = s.getPiece(); 
          p.moving = true;
@@ -82,33 +88,34 @@ checkForInputs();
          }
  }
  
- boolean isEscapeSquareForKing(Square s){
+ boolean isEscapeSquareForKing(Square s, Piece p){
+ 
      if(whiteToMove){
-       if(squaresUnderAttackByBlack.contains(s)) return false;
+       if(squaresUnderAttackByBlack.contains(s.index) && p.moveIndexes.contains(s.index)) return false;
        else return true;
        
      }
      else{
-        if(squaresUnderAttackByWhite.contains(s)) return false;  
+        if(squaresUnderAttackByWhite.contains(s.index) && p.moveIndexes.contains(s.index)) return false;   //<>//
          else return true;  
        }
      }
+  //<>//
  
- 
- boolean resolvesCheck(Square s){ 
+ boolean resolvesCheck(Square s, Piece p){  //<>//
   //Square kingLocation = getKingLocation();  //<>//
   if(kingInCheck == false) return true; 
   else{ 
-    if(isEscapeSquareForKing(s)){
-      kingInCheck = false;  //<>//
+    if((p instanceof King) && isEscapeSquareForKing(s, p)){
+      kingInCheck = false; 
       return true; 
-    } //<>//
-  } //<>//
+    }
+  }
   return false; 
  }
  
  boolean movePlacesSelfInCheck(Square s, Piece p){ 
-   if ( (p instanceof King) && !isEscapeSquareForKing(s) ) { 
+   if ( (p instanceof King) && !isEscapeSquareForKing(s, p ) ) { 
   return true;  
  }
 
@@ -118,46 +125,50 @@ return false;
  
  
  boolean satisfiesConstraints(Square s, Piece p){ 
-   if (resolvesCheck(s) && !movePlacesSelfInCheck(s, p)) return true; 
-   return false; 
+   if (resolvesCheck(s, p) && !movePlacesSelfInCheck(s, p)){
+   return true; 
+   }
+   else{
+   sf_error.play(); 
+   return false;
+   }
   
  }
  
   void placePieceAfterMovement(){
- 
+    
        Square s = getSquareUnderMouse(); 
        Piece p = getMovingPiece();
-       move_capture_stay(s, p); 
-     
-        
-    
-   
+       move_capture_stay(s, p);  
      
        }   
    
  
  void move_capture_stay(Square s, Piece p){ 
-    if(s != null &&  p != null) { 
+    if(s != null &&  p != null) {  //<>//
         Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index) && satisfiesConstraints(s, p) );
-        if(s == p.currentSquare){
-         s.setPiece(p); 
-         p.moving = false; 
-         movingPiece = false;
-         
-        }
-                   //<>//
+       
+                  
         if (validSquare && p.enemyPieceOnSquare(s)){
+          //capture enemy piece
           p.captureOn(s);  
           movingPiece = false; 
           sf_capture.play();
           nextPlayersTurn(); 
            
          } 
-         if(validSquare){
+         else if(validSquare){
+         // Move to the square
            p.move(s); 
            movingPiece = false; 
            sf_move.play(); 
           nextPlayersTurn();  
+         }
+         else{
+         // put the piece back down
+         s.setPiece(p); 
+         p.moving = false; 
+         movingPiece = false; 
          }
    }
  }
@@ -165,7 +176,6 @@ return false;
  void showMoves(){
    if(getMovingPiece() != null){
    Piece p = getMovingPiece();
-
    for(int loc : p.legalMoves()){
      fill(50); 
      Square s = board.getSquareByIndex(loc); 
@@ -192,20 +202,14 @@ return false;
  
  Boolean isEnemyKingInCheck(){
   
-      if(squaresUnderAttackByWhite.contains(getEnemyKingLocation())
-           || squaresUnderAttackByBlack.contains(getEnemyKingLocation())){ 
+      if(squaresUnderAttackByWhite.contains(getEnemyKingLocation().index)
+           || squaresUnderAttackByBlack.contains(getEnemyKingLocation().index)){ 
        return true;  
       }
       return false; 
-    } 
- 
- 
-
-   
-  
-   
- 
- 
+    }
+    
+    
  
  void undo(){
  // move the last moved piece back to it's previous square.  
@@ -220,7 +224,11 @@ return false;
  }
  
  void startingPosition(){   //<>//
- movingPiece = false; 
+ movingPiece = false;
+ kingInCheck = false; 
+ whiteToMove = true;
+ squaresUnderAttackByBlack.clear(); 
+ squaresUnderAttackByWhite.clear();  //<>//
  board.resetBoard(); 
  }
  
@@ -228,7 +236,7 @@ return false;
 
  
 void debugMessages(){
-   textSize(20); //<>//
+   textSize(20);
      fill(255,0,0); 
      for(Square s : squares){
         text(s.piece.x, s.center.x, s.center.y);
@@ -250,43 +258,38 @@ void updateSquaresAttackedByWhite(){
    if(!p.isblackPiece  && !(p instanceof Pawn)){
     p.legalMoves(); 
      for(int i: p.moveIndexes){ 
-      squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
+      squaresUnderAttackByWhite.add(i); 
      }
    }
    else if (!p.isblackPiece && (p instanceof Pawn)){ 
      for(int i: ((Pawn) p).attackingMoves()){ 
-       squaresUnderAttackByWhite.add(board.getSquareByIndex(i)); 
+       squaresUnderAttackByWhite.add(i); 
      } 
    }
-  }
-
-
-  
-   
-  
+  } 
 }
 
 void updateSquaresAttackedByBlack(){
+  print("USAB Black called \n"); 
   squaresUnderAttackByBlack.clear(); 
   for(Piece p : board.pieces){
    if(p.isblackPiece && !(p instanceof Pawn)){
     p.legalMoves(); 
      for(int i: p.moveIndexes){ 
-      squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
+      squaresUnderAttackByBlack.add(i); 
      }
    }
     else if (p.isblackPiece && (p instanceof Pawn)){ 
      for(int i: ((Pawn) p).attackingMoves()){ 
-       squaresUnderAttackByBlack.add(board.getSquareByIndex(i)); 
+       squaresUnderAttackByBlack.add(i); 
      } 
    }
   }
-   print("Squares under attack by Black");
-  for(Square s: squaresUnderAttackByBlack){ 
-    print(s.index + "\n"); 
-  }
+
   
 }
+
+
 
 void showCheck(){
   fill(255,0,0,60); // red with 60% opacity
@@ -338,6 +341,8 @@ void drawArrow(){
   }
 
   }
+  
+
   
   void showAttackingMoves(Piece p){
     

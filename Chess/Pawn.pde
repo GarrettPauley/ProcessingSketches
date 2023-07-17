@@ -13,9 +13,7 @@ class Pawn extends Piece{
         previousSquares.add(currentSquare);
         s.piece = this;
         currentSquare = s; 
-        
         moveToSquare(s);
-     
         game.movedPieces.add(this);
         moving = false;
          

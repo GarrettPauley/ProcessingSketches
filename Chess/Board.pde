@@ -161,8 +161,7 @@ for(Piece p_: pieces){
    
 void resetBoard(){ 
      pieces.clear(); 
-     capturedPieces.clear();  
-
+     capturedPieces.clear(); 
       for(Square s: squares){
       s.setPiece(null); 
    }
@@ -211,7 +210,7 @@ List<Integer> getSquareswithWhitePieces(){
 
 
  //<>//
-
+ //<>//
 
 
 }

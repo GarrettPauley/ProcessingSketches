@@ -119,7 +119,7 @@ class King extends Piece{
    if(isblackPiece){
      // remove the squares attacked by White. 
       for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
-      if(game.squaresUnderAttackByWhite.contains( board.getSquareByIndex(moveIndexes.get(i) ))){
+      if(game.squaresUnderAttackByWhite.contains(moveIndexes.get(i))){
         moveIndexes.remove(i);
       }
       }
@@ -127,7 +127,7 @@ class King extends Piece{
    else { 
    // remove the squares attacked by Black. 
       for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
-      if(game.squaresUnderAttackByBlack.contains( board.getSquareByIndex(moveIndexes.get(i) ))){
+      if(game.squaresUnderAttackByBlack.contains(moveIndexes.get(i))){
         moveIndexes.remove(i);
       }
       }

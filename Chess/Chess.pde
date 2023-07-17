@@ -1,6 +1,7 @@
 import java.util.*;
  SoundFile sf_capture;
  SoundFile sf_move; 
+ SoundFile sf_error; 
 
 int ADJACENT = 8; 
 int DIAGONAL_LEFT = 9; 
@@ -15,6 +16,7 @@ void setup(){
  game = new Game(); 
  sf_capture = new SoundFile(this, "Resources/public_sound_standard_Capture.mp3"); 
  sf_move = new SoundFile(this, "Resources/public_sound_standard_Move.mp3");
+ sf_error = new SoundFile(this, "Resources/public_sound_standard_Error.mp3");
  
  
  // second window to show game state and debugging messages. 
@@ -67,6 +69,8 @@ Game game;
    text("Captured Pieces: " +  game.board.capturedPieces.size(), 20,40);
    text("Squares attacked by white: " +  game.squaresUnderAttackByWhite.size(), 20,60);
    text("king in check: " +  game.kingInCheck, 20,80);
+   text("White's Turn: " + game.whiteToMove, 20,100);
+    
    
   
   }
