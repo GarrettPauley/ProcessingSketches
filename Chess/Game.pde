@@ -28,11 +28,7 @@ class Game{
    kingInCheck = false; 
    squaresUnderAttackByWhite = new ArrayList();
    squaresUnderAttackByBlack = new ArrayList();
-   movedPieces = new ArrayList<Piece>(); 
-    
-
-  
-  
+   movedPieces = new ArrayList<Piece>();   
    
  }
   
@@ -47,7 +43,7 @@ class Game{
     // display squares
     for(Square s: board.squares){
          s.display();
-         //debugMessages();
+         debugMessages();
              
     }          
      for( Piece p: board.pieces){
@@ -96,18 +92,18 @@ checkForInputs();
        
      }
      else{
-        if(squaresUnderAttackByWhite.contains(s.index) && p.moveIndexes.contains(s.index)) return false;   //<>//
+        if(squaresUnderAttackByWhite.contains(s.index) && p.moveIndexes.contains(s.index)) return false;  
          else return true;  
        }
      }
   //<>//
  
- boolean resolvesCheck(Square s, Piece p){  //<>//
-  //Square kingLocation = getKingLocation();  //<>//
-  if(kingInCheck == false) return true; 
+ boolean resolvesCheck(Square s, Piece p){ 
+  //Square kingLocation = getKingLocation(); 
+  if(kingInCheck == false) return true;  //<>//
   else{ 
-    if((p instanceof King) && isEscapeSquareForKing(s, p)){
-      kingInCheck = false; 
+    if((p instanceof King) && isEscapeSquareForKing(s, p)){ //<>//
+      kingInCheck = false;  //<>//
       return true; 
     }
   }
@@ -139,13 +135,13 @@ return false;
     
        Square s = getSquareUnderMouse(); 
        Piece p = getMovingPiece();
-       move_capture_stay(s, p);  
+       move_capture_stay(s, p);   //<>//
      
        }   
    
  
  void move_capture_stay(Square s, Piece p){ 
-    if(s != null &&  p != null) {  //<>//
+    if(s != null &&  p != null) { 
         Boolean validSquare = (s != p.currentSquare) &&  (p.moveIndexes.contains(s.index) && satisfiesConstraints(s, p) );
        
                   
@@ -166,7 +162,7 @@ return false;
          }
          else{
          // put the piece back down
-         s.setPiece(p); 
+         p.currentSquare.setPiece(p); 
          p.moving = false; 
          movingPiece = false; 
          }
@@ -179,7 +175,7 @@ return false;
    for(int loc : p.legalMoves()){
      fill(50); 
      Square s = board.getSquareByIndex(loc); 
-     ellipse(s.center.x, s.center.y, 10,10); 
+     ellipse(s.center.x, s.center.y, 20,20); 
      
    }
    }
@@ -228,32 +224,33 @@ return false;
  kingInCheck = false; 
  whiteToMove = true;
  squaresUnderAttackByBlack.clear(); 
- squaresUnderAttackByWhite.clear();  //<>//
+ squaresUnderAttackByWhite.clear(); 
  board.resetBoard(); 
  }
  
-
+ //<>//
 
  
 void debugMessages(){
    textSize(20);
      fill(255,0,0); 
      for(Square s : squares){
-        text(s.piece.x, s.center.x, s.center.y);
+        text(s.index, s.center.x, s.center.y);
      }
      
 }
 
 
 void nextPlayersTurn(){
- if(whiteToMove == true) whiteToMove = false; 
+ if(whiteToMove == true) whiteToMove = false;  //<>//
  else whiteToMove = true;
  updateSquaresAttackedByWhite();
  updateSquaresAttackedByBlack();
 }
 
 void updateSquaresAttackedByWhite(){
-  squaresUnderAttackByWhite.clear(); 
+  
+  squaresUnderAttackByWhite.clear();  //<>//
   for(Piece p : board.pieces){ //<>//
    if(!p.isblackPiece  && !(p instanceof Pawn)){
     p.legalMoves(); 
@@ -270,7 +267,7 @@ void updateSquaresAttackedByWhite(){
 }
 
 void updateSquaresAttackedByBlack(){
-  print("USAB Black called \n"); 
+  print("USAB Black called \n");  //<>//
   squaresUnderAttackByBlack.clear(); 
   for(Piece p : board.pieces){
    if(p.isblackPiece && !(p instanceof Pawn)){

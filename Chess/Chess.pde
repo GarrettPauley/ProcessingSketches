@@ -67,10 +67,14 @@ Game game;
    textSize(30); 
    text("Moves: " +  game.movedPieces.size(), 20,20); 
    text("Captured Pieces: " +  game.board.capturedPieces.size(), 20,40);
-   text("Squares attacked by white: " +  game.squaresUnderAttackByWhite.size(), 20,60);
    text("king in check: " +  game.kingInCheck, 20,80);
    text("White's Turn: " + game.whiteToMove, 20,100);
-    
+
+ 
+ //  if(game.getMovingPiece() != null){
+ //     print("squares attacked by moving piece " + game.getMovingPiece().moveIndexes + "\n"); 
+ //  }
+  
    
   
   }
