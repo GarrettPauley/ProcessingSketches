@@ -102,11 +102,15 @@ void moveToSquare(Square s){
   board.pieces.remove(captured);
   board.capturedPieces.add(captured);
   previousSquares.add(currentSquare);
-  move(s); 
-  //moveToSquare(s); 
-  //s.piece = this;
-  //currentSquare = s; 
-  //moving = false;
+    if(s != this.currentSquare){
+        Move m = new Move(this, this.currentSquare, s, true);
+        currentSquare.piece = null;
+        game.moves.add(m);
+        s.piece = this;
+        currentSquare = s;    
+        moveToSquare(s);
+        moving = false;     
+     }
   
  }
  
@@ -118,7 +122,7 @@ void moveToSquare(Square s){
         Move m = new Move(this, this.currentSquare, s, false);
         currentSquare.piece = null;
         //print("Adding move from " + m.from.name  + "to " + m.to.name + " called from piece \n");
-        game.moves.add(m); //<>//
+        game.moves.add(m);
         s.piece = this;
         currentSquare = s;    
         moveToSquare(s);
@@ -127,13 +131,14 @@ void moveToSquare(Square s){
   }
   
   
-  // void dummy_move(Square s){
-  //      s.piece = this;
-  //      currentSquare = s;    
-  //      moveToSquare(s);
-  //      moving = false;
+   void dummy_move(Square s){
+        
+        s.piece = this;
+        currentSquare = s;    
+        moveToSquare(s);
+        moving = false;  
          
-  //}
+  }
   
   
 
@@ -142,7 +147,7 @@ void moveToSquare(Square s){
    if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
    else   occupied = board.getSquareswithWhitePieces();
      for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
-      if(occupied.contains(moveIndexes.get(i))){ //<>//
+      if(occupied.contains(moveIndexes.get(i))){
        moveIndexes.remove(i);  
       }
      }

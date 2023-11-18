@@ -53,10 +53,10 @@ class Game{
       p.display();
           
  }
+ 
 if(isEnemyKingInCheck()){ 
  kingInCheck = true; 
  showCheck();
-  
 }
 showMoves();
 drawArrow();
@@ -73,7 +73,6 @@ showOccupiedSquare();
  void checkForMovingPieces(){
    Square s = getSquareUnderMouse(); 
   
-     
      if(s != null 
          && s.getPiece() != null 
          && s.getPiece().isblackPiece == !whiteToMove 
@@ -110,11 +109,38 @@ showOccupiedSquare();
      return false;  
    }
    else{
-    undo(moves.get(moves.size()-1));
     return true; 
    }
    
  }
+  
+ 
+ void undo(Move m){
+ print("undoing move: "); 
+ print("from " + m.from.name + " to " + m.to.name + "\n");  
+ if(m.capture){ //<>//
+  
+   Piece captured = board.capturedPieces.get(board.capturedPieces.size()-1);
+
+   m.to.piece = captured;  
+   m.piece.dummy_move(m.from);
+   moves.remove(moves.get(moves.size()-1));
+   
+   board.capturedPieces.remove(captured);
+   board.pieces.add(captured);
+ }
+ else{ 
+   m.to.piece = null; 
+   m.piece.dummy_move(m.from);
+   moves.remove(moves.get(moves.size()-1));
+   
+ }
+ 
+     updateSquaresAttackedByWhite(this.board);
+     updateSquaresAttackedByBlack(this.board);
+
+ }
+  
  
  boolean resolvesCheck(Square s, Piece p){ 
 
@@ -165,7 +191,7 @@ return false;
     
        Square s = getSquareUnderMouse(); 
        Piece p = getMovingPiece();
-       move_capture_stay(s, p);   //<>//
+       move_capture_stay(s, p);  
      
        }  
        
@@ -206,46 +232,6 @@ return false;
 
 
  
- 
- 
-  boolean pawnOrPieceMoveResolvesCheck (Square s, Piece p){ 
-          
-     this.board.setPieceOnSquare(p,s);  
-     updateSquaresAttackedByWhite(this.board);
-     updateSquaresAttackedByBlack(this.board);
-     if(isEnemyKingInCheck()){
-       this.board.setPieceOnSquare(null,s); 
-       return false;  
-     }
-     else{
-      return true; 
-     }
-   
- }
- 
- void undo(Move m){
- 
- if(m.capture){
-   Piece captured = board.capturedPieces.get(board.capturedPieces.size()-1);
-   m.to.piece = captured;  
-   m.piece.move(m.from);
-   moves.remove(moves.get(moves.size()-1));
-   moves.remove(moves.get(moves.size()-1));
-   board.capturedPieces.remove(captured); 
- }
- else{  //<>//
-   m.to.piece = null; 
-   m.piece.move(m.from);
-   moves.remove(moves.get(moves.size()-1));
-   moves.remove(moves.get(moves.size()-1));
- }
- 
-     updateSquaresAttackedByWhite(this.board);
-     updateSquaresAttackedByBlack(this.board);
-
-  
- }
-  
 
  
  
@@ -286,11 +272,7 @@ return false;
       return false; 
     }
     
-    
- 
-
- 
- void startingPosition(){   //<>//
+ void startingPosition(){  
  movingPiece = false;
  kingInCheck = false; 
  whiteToMove = true;
@@ -309,26 +291,20 @@ void nextPlayersTurn(){
  else whiteToMove = true;
  updateSquaresAttackedByWhite(this.board);
  updateSquaresAttackedByBlack(this.board);
- //print("here are all the moves: \n");
- //for(Move m: moves){ 
- // print( m.from.name  + "to " + m.to.name +  "\n"); 
- //}
+
 }
 
 void updateSquaresAttackedByWhite(ChessBoard board){
-  print("in updateSquaresAttackedByWhite \n"); 
   squaresUnderAttackByWhite.clear(); 
   for(Piece p : board.pieces){
    if(!p.isblackPiece  && !(p instanceof Pawn)){
     p.legalMoves();
-    if(p.startingSquare == board.findSquareByName("F1")){ 
-     print(p.moveIndexes + "\n");  
-    }
+
      for(int i: p.moveIndexes){ 
       squaresUnderAttackByWhite.add(i); 
      }
    }
-   else if (!p.isblackPiece && (p instanceof Pawn)){  //<>//
+   else if (!p.isblackPiece && (p instanceof Pawn)){ 
     
      for(int i: ((Pawn) p).attackingMoves()){ 
      
@@ -338,8 +314,7 @@ void updateSquaresAttackedByWhite(ChessBoard board){
   } 
 }
 
-void updateSquaresAttackedByBlack(ChessBoard board){ //<>//
-  print("in updateSquaresAttackedByBlack \n"); 
+void updateSquaresAttackedByBlack(ChessBoard board){
   squaresUnderAttackByBlack.clear(); 
   for(Piece p : board.pieces){
    if(p.isblackPiece && !(p instanceof Pawn)){
@@ -414,7 +389,6 @@ void drawArrow(){
 
   
   void showAttackingMoves(Piece p){
-    print("called showAttackintMoves"); 
     if(p instanceof Pawn){ 
      for(int i: ((Pawn) p).attackingMoves()){ 
       board.getSquareByIndex(i).drawCircleInSquare();  
@@ -453,9 +427,9 @@ void debugMessages(){
        }
        else{
        text("O", s.center.x, s.center.y); 
-     }
+       }
      //text(s.index, s.center.x, s.center.y);
-     }   
+     }
      
 }
   
@@ -513,4 +487,5 @@ void debugMessages(){
 
  
  
+  
   

@@ -9,7 +9,7 @@ class Pawn extends Piece{
    
      
   }
- //<>//
+ //<>// //<>//
   
   
    
@@ -44,16 +44,13 @@ class Pawn extends Piece{
   
   @Override
   ArrayList<Integer> legalMoves(){
-   
    moveIndexes.clear();
-  
      if(isblackPiece){
        addblackPawnMoves();   
         }
      else{
      addwhitePawnMoves();
     }
-    //print(moveIndexes); 
   return moveIndexes; 
   }
   
