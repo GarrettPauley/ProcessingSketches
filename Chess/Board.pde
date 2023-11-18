@@ -1,5 +1,5 @@
 
-class ChessBoard{
+ class ChessBoard{
  int sizeX = 720; 
 int sizeY = 720; 
 int scale = sizeX/9;
@@ -15,7 +15,16 @@ color darkSquareColor = color(112,102,119);
 ChessBoard(int mode){
   createBoard(mode);
   initPieces();
+}
 
+ChessBoard(ArrayList<Square> _squares, ArrayList<Piece> _pieces){
+ squares = _squares; 
+ pieces = _pieces; 
+}
+
+ChessBoard createBoardCopy(ChessBoard original){ 
+  ChessBoard copy = new ChessBoard(original.squares, original.pieces); 
+  return copy; 
 }
 
  
@@ -101,8 +110,6 @@ void createBoard(int mode){
    capturedPieces = new ArrayList<Piece>(); 
    
    pieces.add( new Pawn("Resources/white_pawn.png", findSquareByName("A2"),this));
-   
-  
    pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("B2"),this));  
    pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("C2"),this)); 
    pieces.add(new Pawn("Resources/white_pawn.png", findSquareByName("D2"),this)); 
@@ -201,6 +208,24 @@ List<Integer> getSquareswithWhitePieces(){
            .map(Square::getSquareIndex)
              .collect(Collectors.toList()); 
 }
+
+  void mock_move(Square s, Piece p){ 
+               
+        if (p.enemyPieceOnSquare(s)){
+          print("called p.captureOn() from mock_move"); 
+          p.captureOn(s); 
+         
+         } 
+         else{
+         // Move to the square
+          print("called move from mock_move \n"); 
+           p.move(s); 
+           
+         
+         } 
+   }
+   
+
 
 
 

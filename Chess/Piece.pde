@@ -67,7 +67,7 @@ abstract class Piece{
 
 void movetoPreviousSquare(){
   Square s = previousSquares.get(previousSquares.size() - 1);
-  moveToSquare(s);
+  move(s);
 }
 
 
@@ -97,29 +97,43 @@ void moveToSquare(Square s){
  
  
  void captureOn(Square s){
+  
   Piece captured = s.piece;
   board.pieces.remove(captured);
   board.capturedPieces.add(captured);
   previousSquares.add(currentSquare);
-  moveToSquare(s); 
-  s.piece = this;
-  moving = false;
-  
+  move(s); 
+  //moveToSquare(s); 
+  //s.piece = this;
+  //currentSquare = s; 
+  //moving = false;
   
  }
+ 
+
 
    void move(Square s){
+     if(s != this.currentSquare){
         previousSquares.add(currentSquare);
+        Move m = new Move(this, this.currentSquare, s, false);
+        currentSquare.piece = null;
+        //print("Adding move from " + m.from.name  + "to " + m.to.name + " called from piece \n");
+        game.moves.add(m); //<>//
         s.piece = this;
-        currentSquare = s; 
-        
+        currentSquare = s;    
         moveToSquare(s);
-     
-        game.movedPieces.add(this);
-        moving = false;
-         
+        moving = false;     
+     }
   }
   
+  
+  // void dummy_move(Square s){
+  //      s.piece = this;
+  //      currentSquare = s;    
+  //      moveToSquare(s);
+  //      moving = false;
+         
+  //}
   
   
 
@@ -127,9 +141,9 @@ void moveToSquare(Square s){
    List<Integer> occupied; 
    if(isblackPiece) occupied =  board.getSquareswithBlackPieces();
    else   occupied = board.getSquareswithWhitePieces();
-     for(int i = moveIndexes.size() - 1; i >= 0 ; i--){ //<>//
-      if(occupied.contains(moveIndexes.get(i))){ //<>// //<>//
-       moveIndexes.remove(i);   //<>//
+     for(int i = moveIndexes.size() - 1; i >= 0 ; i--){
+      if(occupied.contains(moveIndexes.get(i))){ //<>//
+       moveIndexes.remove(i);  
       }
      }
       

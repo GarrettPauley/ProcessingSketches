@@ -2,26 +2,21 @@ class Pawn extends Piece{
   
    boolean onLeftEdge = leftEdgeIndexes.contains(currentSquare.index);
    boolean onRightEdge = rightEdgeIndexes.contains(currentSquare.index);
+   String name; 
   
    Pawn(String imagePath, Square s, ChessBoard b){
      super(imagePath, s, b); 
+   
      
   }
-  
-  @Override
-  void move(Square s){
-        previousSquares.add(currentSquare);
-        s.piece = this;
-        currentSquare = s; 
-        moveToSquare(s);
-        game.movedPieces.add(this);
-        moving = false;
-         
-  }
+ //<>//
   
   
    
   ArrayList<Integer> attackingMoves(){
+   onLeftEdge = leftEdgeIndexes.contains(currentSquare.index);
+   onRightEdge = rightEdgeIndexes.contains(currentSquare.index);
+
    moveIndexes.clear();
   
      if(isblackPiece){
@@ -58,6 +53,7 @@ class Pawn extends Piece{
      else{
      addwhitePawnMoves();
     }
+    //print(moveIndexes); 
   return moveIndexes; 
   }
   
